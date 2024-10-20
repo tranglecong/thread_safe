@@ -5,12 +5,6 @@
 #include <ostream>
 #include <thread>
 
-// Helper function to simulate work
-// void sleep_ms(int ms)
-// {
-//     std::this_thread::sleep_for(std::chrono::milliseconds{ms});
-// }
-
 int main()
 {
     using Queue = ThreadSafe::Queue<int>;
