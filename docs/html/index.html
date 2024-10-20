@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Thread Safe Library: Main Page</title>
+<title>Thread Safe Library: Thread Safe</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -28,6 +28,7 @@
    <div id="projectname">Thread Safe Library
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">@Trang Le - [trangs.leecoong@gmail.com]</div>
   </td>
  </tr>
  </tbody>
@@ -81,11 +82,88 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Thread Safe Library Documentation</div>  </div>
+<div class="title">Thread Safe </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_README"></a> The <b>Thread Safe Library</b> is a C++ library that provides utilities for managing thread-safe operations. This library is designed to simplify concurrent programming by offering easy-to-use and robust thread-safe abstractions.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Features</h1>
+<ul>
+<li><b>Queue</b>: A thread-safe queue with the ability to control pop and push operations, along with policies for discarding elements (oldest, newest, or no discard).</li>
+<li><b>Variable</b>: A thread-safe variable manager, ensuring safe reads and writes across multiple threads.</li>
+<li><b>Thread</b>: A thread manager that supports once mode and loop mode, can check results using callbacks and includes some other features.</li>
+<li><b>Wait</b>: A mechanism to safely handle thread waiting and signaling.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Table of Contents</h1>
+<ul>
+<li><a href="#thread-safe">Thread Safe</a><ul>
+<li><a href="#features">Features</a></li>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#installation">Installation</a><ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#intergration">Intergration</a></li>
+</ul>
+</li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#queue-example">Queue Example</a></li>
+<li><a href="#thread-example">Thread Example</a></li>
+<li><a href="#variable-example">Variable Example</a></li>
+<li><a href="#wait-example">Wait Example</a></li>
+</ul>
+</li>
+<li><a href="#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Installation</h1>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Prerequisites</h2>
+<p>To use this library, you need:</p>
+<ul>
+<li><b>CMake</b> 3.10 or higher</li>
+<li><b>GCC</b>, <b>Clang</b> or <b>MSVC</b> compiler with C++17 support</li>
+<li><b>GoogleTest</b> (automatically fetched by CMake for testing)</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Intergration</h2>
+<p>**_This library can be used as <a href="www.cmake.org">CMake</a> subdirectory_**</p>
+<ol type="1">
+<li>Fetch it, e.g. using <a href="http://git-scm.com/docs/git-submodule">git submodules</a> <code>git submodule add <a href="https://github.com/tranglecong/thread_safe">https://github.com/tranglecong/thread_safe</a></code> and <code>git submodule update --init --recursive</code>.</li>
+<li>Call <code>add_subdirectory(ext/thread_safe)</code> or whatever your local path is to make it available in <a href="www.cmake.org">CMake</a>.</li>
+<li>Simply call <code>target_link_libraries(your_target PUBLIC thread_safe)</code> to link this library and setups the include search path and compilation options.</li>
+</ol>
+<p>**_You can also install thread safe library_**</p>
+<ol type="1">
+<li><p class="startli">Run CMake configure inside the library sources. If you do not want to build the UT set <code>-DTHREAD_SAFE_BUILD_TESTS=OFF</code></p>
+<p class="startli">```bash cmake -DCMAKE_BUILD_TYPE=Debug -DTHREAD_SAFE_BUILD_TESTS=ON -S . -B ./build ```</p>
+</li>
+<li><p class="startli">Build and install the library under <code>${CMAKE_INSTALL_PREFIX}</code>. You may be required to have sudo privileges to install in the <code>/usr/*</code>.</p>
+<p class="startli">```bash cmake &ndash;build ./build -j8 &ndash; install ```</p>
+<p class="startli">[Optional] if you want to run UT.</p>
+<p class="startli">```bash ctest &ndash;test-dir ./build ```</p>
+</li>
+<li><p class="startli">To use an installed library.</p>
+<p class="startli">```cmake find_package(thread_safe REQUIRED) target_link_libraries(your_target PUBLIC thread_safe) ```</p>
+</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md6"></a>
+Usage</h1>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Queue Example</h2>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Thread Example</h2>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Variable Example</h2>
+<h2><a class="anchor" id="autotoc_md10"></a>
+Wait Example</h2>
+<h1><a class="anchor" id="autotoc_md11"></a>
+Documentation</h1>
+<p>Full documentation can be found at <a href="https://tranglecong.github.io/thread_safe/html">https://tranglecong.github.io/thread_safe/html</a>. </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

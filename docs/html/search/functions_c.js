@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['_7ethread_93',['~Thread',['../classThreadSafe_1_1Thread.html#a99dbbddf0f585f5191df557170a31348',1,'ThreadSafe::Thread']]],
-  ['_7ewait_94',['~Wait',['../classThreadSafe_1_1Wait.html#a0e81b588ea101e814eab84ada14c4f5c',1,'ThreadSafe::Wait']]]
+  ['_7ethread_94',['~Thread',['../classThreadSafe_1_1Thread.html#a99dbbddf0f585f5191df557170a31348',1,'ThreadSafe::Thread']]],
+  ['_7ewait_95',['~Wait',['../classThreadSafe_1_1Wait.html#a0e81b588ea101e814eab84ada14c4f5c',1,'ThreadSafe::Wait']]]
 ];
