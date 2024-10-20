@@ -55,6 +55,7 @@ endif()
 
 # Subdirectories
 add_subdirectory(src)
+add_subdirectory(example)
 
 if(THREAD_SAFE_BUILD_TESTS)
     enable_testing()
