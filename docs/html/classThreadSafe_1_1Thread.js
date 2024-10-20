@@ -4,6 +4,10 @@ var classThreadSafe_1_1Thread =
     [ "Func", "classThreadSafe_1_1Thread.html#ae0b2142f8d857f1e15cf3f287c485dc9", null ],
     [ "Pred", "classThreadSafe_1_1Thread.html#ac96aeb4cc51855537438c9ea8a52329e", null ],
     [ "ResultCallback", "classThreadSafe_1_1Thread.html#a4df5ed4ce073b4d09472029df3fd1f07", null ],
+    [ "RunMode", "classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a", [
+      [ "ONCE", "classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500aaa32d16355630f112473d1ae254519c24", null ],
+      [ "LOOP", "classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500aa9159b3578e4e1eb31ffdf90acd6f6e40", null ]
+    ] ],
     [ "Thread", "classThreadSafe_1_1Thread.html#a0a73953048d499d65cf09dd687267681", null ],
     [ "~Thread", "classThreadSafe_1_1Thread.html#a99dbbddf0f585f5191df557170a31348", null ],
     [ "Thread", "classThreadSafe_1_1Thread.html#a381227103140c8eaa9130cf6d9aa07d7", null ],

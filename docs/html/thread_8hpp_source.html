@@ -116,20 +116,20 @@ $(document).ready(function(){initNavTree('thread_8hpp_source.html',''); initResi
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> setNaitiveThreadPriority(ThreadPriority priority, <span class="keyword">const</span> std::thread::native_handle_type native_handle);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">enum class</span> RunMode : uint8_t</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    ONCE = 0,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    LOOP = 1</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... ArgTypes&gt;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classThreadSafe_1_1Thread.html">   57</a></span>&#160;<span class="keyword">class </span><a class="code" href="classThreadSafe_1_1Thread.html">Thread</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">using</span> Callback = std::function&lt;void()&gt;;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">using</span> ResultCallback = std::function&lt;void(<span class="keyword">const</span> Return&amp;)&gt;;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">using</span> Func = std::function&lt;Return(ArgTypes...)&gt;;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">using</span> Pred = std::function&lt;bool()&gt;;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... ArgTypes&gt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classThreadSafe_1_1Thread.html">   48</a></span>&#160;<span class="keyword">class </span><a class="code" href="classThreadSafe_1_1Thread.html">Thread</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">using</span> Callback = std::function&lt;void()&gt;;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">using</span> ResultCallback = std::function&lt;void(<span class="keyword">const</span> Return&amp;)&gt;;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">using</span> Func = std::function&lt;Return(ArgTypes...)&gt;;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">using</span> Pred = std::function&lt;bool()&gt;;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a">   59</a></span>&#160;    <span class="keyword">enum class</span> <a class="code" href="classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a">RunMode</a> : uint8_t</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        ONCE = 0,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        LOOP = 1</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    };</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classThreadSafe_1_1Thread.html#a0a73953048d499d65cf09dd687267681">   71</a></span>&#160;    <a class="code" href="classThreadSafe_1_1Thread.html#a0a73953048d499d65cf09dd687267681">Thread</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="classThreadSafe_1_1Thread.html#ac969446afa36963af35e7901f994fabc">name</a>, <span class="keyword">const</span> ThreadPriority priority = ThreadPriority::NORMAL)</div>
@@ -189,7 +189,7 @@ $(document).ready(function(){initNavTree('thread_8hpp_source.html',''); initResi
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        m_exit_callback = exit_callback;</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    }</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="classThreadSafe_1_1Thread.html#af79c76393e5019ab50f2fba8721a416e">  160</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classThreadSafe_1_1Thread.html#af79c76393e5019ab50f2fba8721a416e">start</a>(<span class="keyword">const</span> RunMode mode)</div>
+<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="classThreadSafe_1_1Thread.html#af79c76393e5019ab50f2fba8721a416e">  160</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classThreadSafe_1_1Thread.html#af79c76393e5019ab50f2fba8721a416e">start</a>(<span class="keyword">const</span> <a class="code" href="classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a">RunMode</a> mode)</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    {</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="keywordflow">if</span> (m_thread_ptr != <span class="keyword">nullptr</span>)</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        {</div>
@@ -199,10 +199,10 @@ $(document).ready(function(){initNavTree('thread_8hpp_source.html',''); initResi
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        {</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        }</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        m_loop = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        m_loop.store(<span class="keyword">false</span>, std::memory_order_release);</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">if</span> (mode == RunMode::LOOP)</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        {</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            m_loop = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            m_loop.store(<span class="keyword">true</span>, std::memory_order_release);</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        }</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        m_thread_ptr = std::make_unique&lt;std::thread&gt;([<span class="keyword">this</span>]()</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;                                                     { run(); });</div>
@@ -210,7 +210,7 @@ $(document).ready(function(){initNavTree('thread_8hpp_source.html',''); initResi
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    }</div>
 <div class="line"><a name="l00183"></a><span class="lineno"><a class="line" href="classThreadSafe_1_1Thread.html#af58ae3a4ecfce1d5605980cdd50328a0">  183</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classThreadSafe_1_1Thread.html#af58ae3a4ecfce1d5605980cdd50328a0">stop</a>()</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        m_loop = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        m_loop.store(<span class="keyword">false</span>, std::memory_order_release);</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <span class="keywordflow">if</span> (!m_thread_ptr)</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        {</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
@@ -280,7 +280,7 @@ $(document).ready(function(){initNavTree('thread_8hpp_source.html',''); initResi
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keywordtype">bool</span> isContinue()</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    {</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        <span class="keywordflow">if</span> (!m_loop)</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        <span class="keywordflow">if</span> (!m_loop.load(std::memory_order_acquire))</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        {</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        }</div>
@@ -292,9 +292,10 @@ $(document).ready(function(){initNavTree('thread_8hpp_source.html',''); initResi
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    }</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;};</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;} <span class="comment">// namespace ThreadSafe</span></div>
-<div class="ttc" id="aclassThreadSafe_1_1Thread_html"><div class="ttname"><a href="classThreadSafe_1_1Thread.html">ThreadSafe::Thread</a></div><div class="ttdoc">A thread class that supports custom functions, thread priorities, and callbacks.</div><div class="ttdef"><b>Definition:</b> thread.hpp:58</div></div>
+<div class="ttc" id="aclassThreadSafe_1_1Thread_html"><div class="ttname"><a href="classThreadSafe_1_1Thread.html">ThreadSafe::Thread</a></div><div class="ttdoc">A thread class that supports custom functions, thread priorities, and callbacks.</div><div class="ttdef"><b>Definition:</b> thread.hpp:49</div></div>
 <div class="ttc" id="aclassThreadSafe_1_1Thread_html_a0a73953048d499d65cf09dd687267681"><div class="ttname"><a href="classThreadSafe_1_1Thread.html#a0a73953048d499d65cf09dd687267681">ThreadSafe::Thread::Thread</a></div><div class="ttdeci">Thread(const std::string &amp;name, const ThreadPriority priority=ThreadPriority::NORMAL)</div><div class="ttdoc">Constructor for creating a thread with a function and its arguments.</div><div class="ttdef"><b>Definition:</b> thread.hpp:71</div></div>
 <div class="ttc" id="aclassThreadSafe_1_1Thread_html_a29f2b3eb620f930cbdddc9d1c116cab7"><div class="ttname"><a href="classThreadSafe_1_1Thread.html#a29f2b3eb620f930cbdddc9d1c116cab7">ThreadSafe::Thread::setExitCallback</a></div><div class="ttdeci">void setExitCallback(Callback exit_callback)</div><div class="ttdoc">Sets the exit callback function to be executed when the thread exits.</div><div class="ttdef"><b>Definition:</b> thread.hpp:150</div></div>
+<div class="ttc" id="aclassThreadSafe_1_1Thread_html_a81ad341f3ccfbb3b531f412094e9500a"><div class="ttname"><a href="classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a">ThreadSafe::Thread::RunMode</a></div><div class="ttdeci">RunMode</div><div class="ttdoc">Enum to represent whether the thread should run once or in a loop.</div><div class="ttdef"><b>Definition:</b> thread.hpp:60</div></div>
 <div class="ttc" id="aclassThreadSafe_1_1Thread_html_a8cd2388b0247ea15fd665ea92db3a832"><div class="ttname"><a href="classThreadSafe_1_1Thread.html#a8cd2388b0247ea15fd665ea92db3a832">ThreadSafe::Thread::invoke</a></div><div class="ttdeci">bool invoke(Func func, Args &amp;&amp;... args)</div><div class="ttdoc">Sets the function and its arguments before starting the thread. This function stores the function and...</div><div class="ttdef"><b>Definition:</b> thread.hpp:100</div></div>
 <div class="ttc" id="aclassThreadSafe_1_1Thread_html_a9731772fb36898eb017c27b15fe820fb"><div class="ttname"><a href="classThreadSafe_1_1Thread.html#a9731772fb36898eb017c27b15fe820fb">ThreadSafe::Thread::setResultCallback</a></div><div class="ttdeci">void setResultCallback(ResultCallback result_callback)</div><div class="ttdoc">Sets the result callback function to be executed with the result of the function.</div><div class="ttdef"><b>Definition:</b> thread.hpp:141</div></div>
 <div class="ttc" id="aclassThreadSafe_1_1Thread_html_a99dbbddf0f585f5191df557170a31348"><div class="ttname"><a href="classThreadSafe_1_1Thread.html#a99dbbddf0f585f5191df557170a31348">ThreadSafe::Thread::~Thread</a></div><div class="ttdeci">~Thread()</div><div class="ttdoc">Destructor that ensures the thread stops when the object is destroyed.</div><div class="ttdef"><b>Definition:</b> thread.hpp:80</div></div>

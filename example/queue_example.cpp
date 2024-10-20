@@ -53,10 +53,21 @@ int main()
     // Try to push another element, this should discard the oldest (1)
     queue.push(4); // Oldest element (1) will be discarded
     queue.openPop();
-    std::this_thread::sleep_for(std::chrono::milliseconds{200});
-    running = false;
-    queue.closePop();
     queue.closePush();
+    queue.push(5); // Will not push due to push closed
+    std::this_thread::sleep_for(std::chrono::milliseconds{100});
+
+    // Push more elements
+    queue.openPush();
+    queue.push(6);
+    queue.push(7);
+    queue.push(8);
+    queue.openPop();
+    std::this_thread::sleep_for(std::chrono::milliseconds{100});
+    running = false;
+    queue.closePush();
+    queue.closePop();
     consumerThread.join();
+
     return 0;
 }

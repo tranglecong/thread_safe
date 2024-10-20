@@ -40,15 +40,6 @@ const NativeThreadPrioritys& defaultNativeThreadPrioritys();
 void setNaitiveThreadPriority(ThreadPriority priority, const std::thread::native_handle_type native_handle);
 
 /**
- * @brief Enum to represent whether the thread should run once or in a loop.
- */
-enum class RunMode : uint8_t
-{
-    ONCE = 0,
-    LOOP = 1
-};
-
-/**
  * @brief A thread class that supports custom functions, thread priorities, and callbacks.
  * @tparam Return The return type of the function.
  * @tparam ArgTypes The types of the arguments for the function.
@@ -61,6 +52,15 @@ public:
     using ResultCallback = std::function<void(const Return&)>;
     using Func = std::function<Return(ArgTypes...)>;
     using Pred = std::function<bool()>;
+
+    /**
+     * @brief Enum to represent whether the thread should run once or in a loop.
+     */
+    enum class RunMode : uint8_t
+    {
+        ONCE = 0,
+        LOOP = 1
+    };
 
     /**
      * @brief Constructor for creating a thread with a function and its arguments.
@@ -167,10 +167,10 @@ public:
         {
             return false;
         }
-        m_loop = false;
+        m_loop.store(false, std::memory_order_release);
         if (mode == RunMode::LOOP)
         {
-            m_loop = true;
+            m_loop.store(true, std::memory_order_release);
         }
         m_thread_ptr = std::make_unique<std::thread>([this]()
                                                      { run(); });
@@ -182,7 +182,7 @@ public:
      */
     bool stop()
     {
-        m_loop = false;
+        m_loop.store(false, std::memory_order_release);
         if (!m_thread_ptr)
         {
             return false;
@@ -272,7 +272,7 @@ private:
      */
     bool isContinue()
     {
-        if (!m_loop)
+        if (!m_loop.load(std::memory_order_acquire))
         {
             return false;
         }

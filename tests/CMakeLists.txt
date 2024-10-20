@@ -1,6 +1,7 @@
 # Tests CMakeLists.txt
 # Locate GTest
 include(FetchContent)
+
 # Fetch GoogleTest if it is not found on the system
 FetchContent_Declare(
   googletest

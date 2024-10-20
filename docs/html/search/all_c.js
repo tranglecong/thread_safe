@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['variable_46',['Variable',['../classThreadSafe_1_1Variable.html',1,'ThreadSafe::Variable&lt; T &gt;'],['../classThreadSafe_1_1Variable.html#acd3a8b013b30db2f73aad7f3c93a47d8',1,'ThreadSafe::Variable::Variable()=default'],['../classThreadSafe_1_1Variable.html#af22c8e00591e46af83f9dbd35ef29b6e',1,'ThreadSafe::Variable::Variable(Args &amp;&amp;... args)']]]
+  ['thread_45',['Thread',['../classThreadSafe_1_1Thread.html#a0a73953048d499d65cf09dd687267681',1,'ThreadSafe::Thread::Thread()'],['../classThreadSafe_1_1Thread.html',1,'ThreadSafe::Thread&lt; Return, ArgTypes &gt;']]],
+  ['thread_20safe_46',['Thread Safe',['../index.html',1,'']]]
 ];

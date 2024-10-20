@@ -3,6 +3,7 @@
 # Define the list of example
 set(EXAMPLE_SOURCES
     queue_example.cpp
+    thread_example.cpp
 )
 
 # Loop through each example source and create the corresponding executable

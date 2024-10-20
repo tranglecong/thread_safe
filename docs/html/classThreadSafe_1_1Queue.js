@@ -19,6 +19,7 @@ var classThreadSafe_1_1Queue =
       [ "FULL", "classThreadSafe_1_1Queue.html#a9ccf18d717eeb1614a12ef6f60ceded0aba7de5bc6888294e5884b024a4c894f1", null ]
     ] ],
     [ "Queue", "classThreadSafe_1_1Queue.html#aac87cf3e7e64d3d8372fd6e4b2e435ee", null ],
+    [ "~Queue", "classThreadSafe_1_1Queue.html#ad5b019bda1ce45b537913c885eb8b5d3", null ],
     [ "Queue", "classThreadSafe_1_1Queue.html#ac7068eb12d76e9bace3b8f8c9ed7e603", null ],
     [ "Queue", "classThreadSafe_1_1Queue.html#a98ebfe75b9d09821360a991b0a451683", null ],
     [ "closePop", "classThreadSafe_1_1Queue.html#a9a70981a0d72bdbbf7f547a078395b4e", null ],

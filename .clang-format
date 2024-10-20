@@ -1,0 +1,40 @@
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: c++17
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignTrailingComments: true
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializersBeforeComma: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:           '".*(/).*"'
+    Priority:        98
+  - Regex:           '".*"'
+    Priority:        99
+  - Regex:           '<.*>'
+    Priority:        100
+ColumnLimit: 0
+CommentPragmas : "^\\s*\\\\"
+FixNamespaceComments: true
+IncludeBlocks: Regroup
+IndentCaseLabels: false
+IndentWidth: 4
+NamespaceIndentation: None
+PenaltyReturnTypeOnItsOwnLine: 100
+PointerAlignment: Left
+SortIncludes: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeParens: ControlStatements
+UseTab: Never

@@ -32,11 +32,11 @@ var NAVTREE =
         [ "Prerequisites", "index.html#autotoc_md4", null ],
         [ "Intergration", "index.html#autotoc_md5", null ]
       ] ],
-      [ "Usage", "index.html#autotoc_md6", [
-        [ "Queue Example", "index.html#autotoc_md7", null ],
-        [ "Thread Example", "index.html#autotoc_md8", null ],
-        [ "Variable Example", "index.html#autotoc_md9", null ],
-        [ "Wait Example", "index.html#autotoc_md10", null ]
+      [ "Example", "index.html#autotoc_md6", [
+        [ "Queue", "index.html#autotoc_md7", null ],
+        [ "Thread", "index.html#autotoc_md8", null ],
+        [ "Variable", "index.html#autotoc_md9", null ],
+        [ "Wait", "index.html#autotoc_md10", null ]
       ] ],
       [ "Documentation", "index.html#autotoc_md11", null ]
     ] ],

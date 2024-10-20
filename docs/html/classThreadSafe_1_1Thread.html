@@ -99,6 +99,11 @@ $(document).ready(function(){initNavTree('classThreadSafe_1_1Thread.html',''); i
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a81ad341f3ccfbb3b531f412094e9500a"><td class="memItemLeft" align="right" valign="top"><a id="a81ad341f3ccfbb3b531f412094e9500a"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a">RunMode</a> : uint8_t { <b>ONCE</b> = 0
+, <b>LOOP</b> = 1
+ }</td></tr>
+<tr class="memdesc:a81ad341f3ccfbb3b531f412094e9500a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to represent whether the thread should run once or in a loop. <br /></td></tr>
+<tr class="separator:a81ad341f3ccfbb3b531f412094e9500a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c583143652d55cfd9cd082d37291113"><td class="memItemLeft" align="right" valign="top"><a id="a2c583143652d55cfd9cd082d37291113"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Callback</b> = std::function&lt; void()&gt;</td></tr>
 <tr class="separator:a2c583143652d55cfd9cd082d37291113"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,7 +155,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a29f2b3eb620f930cbdddc9d1c116cab7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classThreadSafe_1_1Thread.html#a29f2b3eb620f930cbdddc9d1c116cab7">setExitCallback</a> (Callback exit_callback)</td></tr>
 <tr class="memdesc:a29f2b3eb620f930cbdddc9d1c116cab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the exit callback function to be executed when the thread exits.  <a href="classThreadSafe_1_1Thread.html#a29f2b3eb620f930cbdddc9d1c116cab7">More...</a><br /></td></tr>
 <tr class="separator:a29f2b3eb620f930cbdddc9d1c116cab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af79c76393e5019ab50f2fba8721a416e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classThreadSafe_1_1Thread.html#af79c76393e5019ab50f2fba8721a416e">start</a> (const RunMode mode)</td></tr>
+<tr class="memitem:af79c76393e5019ab50f2fba8721a416e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classThreadSafe_1_1Thread.html#af79c76393e5019ab50f2fba8721a416e">start</a> (const <a class="el" href="classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a">RunMode</a> mode)</td></tr>
 <tr class="memdesc:af79c76393e5019ab50f2fba8721a416e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the thread.  <a href="classThreadSafe_1_1Thread.html#af79c76393e5019ab50f2fba8721a416e">More...</a><br /></td></tr>
 <tr class="separator:af79c76393e5019ab50f2fba8721a416e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af58ae3a4ecfce1d5605980cdd50328a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classThreadSafe_1_1Thread.html#af58ae3a4ecfce1d5605980cdd50328a0">stop</a> ()</td></tr>
@@ -467,7 +472,7 @@ template&lt;typename Return , typename... ArgTypes&gt; </div>
         <tr>
           <td class="memname">bool <a class="el" href="classThreadSafe_1_1Thread.html">ThreadSafe::Thread</a>&lt; Return, ArgTypes &gt;::start </td>
           <td>(</td>
-          <td class="paramtype">const RunMode&#160;</td>
+          <td class="paramtype">const <a class="el" href="classThreadSafe_1_1Thread.html#a81ad341f3ccfbb3b531f412094e9500a">RunMode</a>&#160;</td>
           <td class="paramname"><em>mode</em></td><td>)</td>
           <td></td>
         </tr>
