@@ -16,33 +16,33 @@ void Wait::notify()
 
 bool Wait::isExit() const
 {
-    return m_exit;
+    return m_exit.load(std::memory_order_acquire);
 }
 
 bool Wait::internalPred() const
 {
-    return !m_internal_pred_flag;
+    return !m_internal_pred_flag.load(std::memory_order_acquire);
 }
 
 void Wait::enableInternalPred()
 {
-    if (!m_internal_pred_flag)
+    if (!m_internal_pred_flag.load(std::memory_order_acquire))
     {
-        m_internal_pred_flag = true;
+        m_internal_pred_flag.store(true, std::memory_order_release);
     }
 }
 
 void Wait::disableInternalPred()
 {
-    if (m_internal_pred_flag)
+    if (m_internal_pred_flag.load(std::memory_order_acquire))
     {
-        m_internal_pred_flag = false;
+        m_internal_pred_flag.store(false, std::memory_order_release);
     }
 }
 
 void Wait::exit()
 {
-    m_exit = true;
+    m_exit.store(true, std::memory_order_release);
     m_condition.notify_all();
 }
 

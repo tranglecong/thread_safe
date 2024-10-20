@@ -74,6 +74,11 @@ public:
      */
     explicit Queue(const Settings& settings);
 
+    /**
+     * @brief Destructor that signal a exit waiting operation
+     */
+    ~Queue();
+
     // Make this class uncopyable
     Queue(const Queue&) = delete;
     Queue& operator=(const Queue&) = delete;
@@ -194,12 +199,20 @@ Queue<T>::Queue(const Settings& settings)
 {
     if (!pushControllable())
     {
-        m_open_push = true;
+        m_open_push.store(true, std::memory_order_release);
     }
     if (!popControllable())
     {
-        m_open_pop = true;
+        m_open_pop.store(true, std::memory_order_release);
     }
+}
+
+template<typename T>
+Queue<T>::~Queue()
+{
+    m_open_pop.store(false, std::memory_order_release);
+    m_open_push.store(false, std::memory_order_release);
+    m_wait.notify();
 }
 
 template<typename T>
@@ -225,7 +238,7 @@ bool Queue<T>::push(const T& elem, const uint32_t timeout_ms)
         return false;
     }
 
-    if (m_status != Status::FULL)
+    if (m_status.load(std::memory_order_acquire) != Status::FULL)
     {
         pushWithLock(elem);
         return true;
@@ -241,6 +254,7 @@ bool Queue<T>::push(const T& elem, const uint32_t timeout_ms)
     {
         auto discarded_elem = std::move(popWithLock());
         onDiscarded(discarded_elem);
+        pushWithLock(elem);
         return true;
     }
     return false;
@@ -284,7 +298,7 @@ void Queue<T>::openPush()
     {
         return;
     }
-    m_open_push = true;
+    m_open_push.store(true, std::memory_order_release);
     m_wait.notify();
 }
 
@@ -295,7 +309,7 @@ void Queue<T>::closePush()
     {
         return;
     }
-    m_open_push = false;
+    m_open_push.store(false, std::memory_order_release);
     m_wait.notify();
 }
 
@@ -306,7 +320,7 @@ void Queue<T>::openPop()
     {
         return;
     }
-    m_open_pop = true;
+    m_open_pop.store(true, std::memory_order_release);
     m_wait.notify();
 }
 
@@ -317,31 +331,31 @@ void Queue<T>::closePop()
     {
         return;
     }
-    m_open_pop = false;
+    m_open_pop.store(false, std::memory_order_release);
     m_wait.notify();
 }
 
 template<typename T>
 bool Queue<T>::waitToPush(const uint32_t timeout_ms)
 {
-    if (!m_open_push)
+    if (!m_open_push.load(std::memory_order_acquire))
     {
         return false;
     }
 
     auto closed_or_not_full_pred = [&]() -> bool
     {
-        if (!m_open_push || m_status != Status::FULL)
+        if (!m_open_push.load(std::memory_order_acquire) || m_status.load(std::memory_order_acquire) != Status::FULL)
         {
             return true;
         }
         return false;
     };
 
-    if (m_status == Status::FULL && m_settings.discard == Discard::NO_DISCARD)
+    if (m_status.load(std::memory_order_acquire) == Status::FULL && m_settings.discard == Discard::NO_DISCARD)
     {
         Wait::Status result{m_wait.waitFor(std::chrono::milliseconds(timeout_ms), closed_or_not_full_pred)};
-        if (result != Wait::Status::SUCCESS || !m_open_push)
+        if (result != Wait::Status::SUCCESS || !m_open_push.load(std::memory_order_acquire))
         {
             return false;
         }
@@ -351,24 +365,24 @@ bool Queue<T>::waitToPush(const uint32_t timeout_ms)
 template<typename T>
 bool Queue<T>::waitToPop(const uint32_t timeout_ms)
 {
-    if (!m_open_pop)
+    if (!m_open_pop.load(std::memory_order_acquire))
     {
         return false;
     }
 
     auto closed_or_not_empty_pred = [&]() -> bool
     {
-        if (!m_open_pop || m_status != Status::EMPTY)
+        if (!m_open_pop.load(std::memory_order_acquire) || m_status.load(std::memory_order_acquire) != Status::EMPTY)
         {
             return true;
         }
         return false;
     };
 
-    if (m_status == Status::EMPTY)
+    if (m_status.load(std::memory_order_acquire) == Status::EMPTY)
     {
         Wait::Status result{m_wait.waitFor(std::chrono::milliseconds(timeout_ms), closed_or_not_empty_pred)};
-        if (result != Wait::Status::SUCCESS || !m_open_pop)
+        if (result != Wait::Status::SUCCESS || !m_open_pop.load(std::memory_order_acquire))
         {
             return false;
         }
@@ -398,18 +412,18 @@ template<typename T>
 void Queue<T>::updateStatus()
 {
     constexpr std::size_t NO_ELEMENT{0};
-    m_size = m_queue.size();
-    if (m_size <= NO_ELEMENT)
+    m_size.store(m_queue.size(), std::memory_order_release);
+    if (m_size.load(std::memory_order_acquire) <= NO_ELEMENT)
     {
-        m_status = Status::EMPTY;
+        m_status.store(Status::EMPTY, std::memory_order_release);
     }
-    else if (m_size >= m_settings.size)
+    else if (m_size.load(std::memory_order_acquire) >= m_settings.size)
     {
-        m_status = Status::FULL;
+        m_status.store(Status::FULL, std::memory_order_release);
     }
     else
     {
-        m_status = Status::NORMAL;
+        m_status.store(Status::NORMAL, std::memory_order_release);
     }
     m_wait.notify();
 }
@@ -419,7 +433,7 @@ bool Queue<T>::waitPushOpen(const uint32_t timeout_ms)
 {
     Wait::Status result{
         m_wait.waitFor(std::chrono::milliseconds(timeout_ms), [this]() -> bool
-                       { return m_open_push; })};
+                       { return m_open_push.load(std::memory_order_acquire); })};
     if (result != Wait::Status::SUCCESS)
     {
         return false;
@@ -432,7 +446,7 @@ bool Queue<T>::waitPopOpen(const uint32_t timeout_ms)
 {
     Wait::Status result{
         m_wait.waitFor(std::chrono::milliseconds(timeout_ms), [this]() -> bool
-                       { return m_open_pop; })};
+                       { return m_open_pop.load(std::memory_order_acquire); })};
     if (result != Wait::Status::SUCCESS)
     {
         return false;
