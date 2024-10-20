@@ -329,7 +329,7 @@ bool Queue<T>::waitToPush(const uint32_t timeout_ms)
         return false;
     }
 
-    static auto closed_or_not_full_pred = [this]() -> bool
+    auto closed_or_not_full_pred = [&]() -> bool
     {
         if (!m_open_push || m_status != Status::FULL)
         {
@@ -356,9 +356,9 @@ bool Queue<T>::waitToPop(const uint32_t timeout_ms)
         return false;
     }
 
-    static auto closed_or_not_empty_pred = [this]() -> bool
+    auto closed_or_not_empty_pred = [&]() -> bool
     {
-        if (!m_open_push || m_status != Status::EMPTY)
+        if (!m_open_pop || m_status != Status::EMPTY)
         {
             return true;
         }

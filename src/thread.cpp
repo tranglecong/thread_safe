@@ -21,7 +21,7 @@ const NativeThreadPrioritys& defaultNativeThreadPrioritys()
                                                  {ThreadPriority::ABOVE_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL},
                                                  {ThreadPriority::HIGHEST, THREAD_PRIORITY_HIGHEST},
                                                  {ThreadPriority::TIME_CRITICAL, THREAD_PRIORITY_TIME_CRITICAL}};
-};
+    return prioritys;
 #elif __linux__
     constexpr int32_t OFFSET{1}; // Avoid to use exactly min and max priority
     static const int32_t min{::sched_get_priority_min(SCHED_FIFO)};

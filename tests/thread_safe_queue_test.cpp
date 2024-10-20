@@ -130,6 +130,7 @@ TEST(QueueTest, PushPopControl)
 TEST(QueueTest, ConcurrentPushPop)
 {
     Queue::Settings settings;
+    settings.control = Queue::Control::NO_CONTROL;
     settings.size = 10;
 
     Queue queue(settings);

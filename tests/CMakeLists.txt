@@ -1,7 +1,6 @@
 # Tests CMakeLists.txt
 # Locate GTest
 include(FetchContent)
-
 # Fetch GoogleTest if it is not found on the system
 FetchContent_Declare(
   googletest
@@ -13,9 +12,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 # Download and build GTest
 FetchContent_MakeAvailable(googletest)
-
-# # Include the ThreadSafe library from the parent directory
-# include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Define the list of tests
 set(TEST_SOURCES
