@@ -1,6 +1,7 @@
 #include "thread_safe/queue.hpp"
 
 #include <chrono>
+#include <cstdlib>
 #include <iostream>
 #include <ostream>
 #include <thread>
@@ -16,7 +17,6 @@ int main()
 
     // Create the thread-safe queue with the given settings
     Queue queue(settings);
-
     // Set a callback to be called when an element is discarded
     queue.setDiscardedCallback(
         [](const int& discardedElem)
@@ -69,5 +69,5 @@ int main()
     queue.closePop();
     consumerThread.join();
 
-    return 0;
+    return EXIT_SUCCESS;
 }

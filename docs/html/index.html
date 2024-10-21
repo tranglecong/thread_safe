@@ -97,30 +97,8 @@ Features</h1>
 <li><b>Wait</b>: A mechanism to safely handle thread waiting and signaling.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md2"></a>
-Table of Contents</h1>
-<ul>
-<li><a href="#thread-safe">Thread Safe</a><ul>
-<li><a href="#features">Features</a></li>
-<li><a href="#table-of-contents">Table of Contents</a></li>
-<li><a href="#installation">Installation</a><ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#intergration">Intergration</a></li>
-</ul>
-</li>
-<li><a href="#example">Example</a><ul>
-<li><a href="#queue">Queue</a></li>
-<li><a href="#thread">Thread</a></li>
-<li><a href="#variable">Variable</a></li>
-<li><a href="#wait">Wait</a></li>
-</ul>
-</li>
-<li><a href="#documentation">Documentation</a></li>
-</ul>
-</li>
-</ul>
-<h1><a class="anchor" id="autotoc_md3"></a>
 Installation</h1>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md3"></a>
 Prerequisites</h2>
 <p>To use this library, you need:</p>
 <ul>
@@ -128,7 +106,7 @@ Prerequisites</h2>
 <li><b>GCC</b>, <b>Clang</b> or <b>MSVC</b> compiler with C++17 support</li>
 <li><b>GoogleTest</b> (automatically fetched by CMake for testing)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md4"></a>
 Intergration</h2>
 <p>**_This library can be used as <a href="www.cmake.org">CMake</a> subdirectory_**</p>
 <ol type="1">
@@ -150,14 +128,15 @@ Intergration</h2>
 <p class="startli">```cmake find_package(thread_safe REQUIRED) target_link_libraries(your_target PUBLIC thread_safe) ```</p>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md6"></a>
-Example</h1>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Example Code</h1>
+<h2><a class="anchor" id="autotoc_md6"></a>
 Queue</h2>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">#include &quot;thread_safe/queue.hpp&quot;</div>
 <div class="line"> </div>
 <div class="line">#include &lt;chrono&gt;</div>
+<div class="line">#include &lt;cstdlib&gt;</div>
 <div class="line">#include &lt;iostream&gt;</div>
 <div class="line">#include &lt;ostream&gt;</div>
 <div class="line">#include &lt;thread&gt;</div>
@@ -173,7 +152,6 @@ Queue</h2>
 <div class="line"> </div>
 <div class="line">    // Create the thread-safe queue with the given settings</div>
 <div class="line">    Queue queue(settings);</div>
-<div class="line"> </div>
 <div class="line">    // Set a callback to be called when an element is discarded</div>
 <div class="line">    queue.setDiscardedCallback(</div>
 <div class="line">        [](const int&amp; discardedElem)</div>
@@ -226,10 +204,10 @@ Queue</h2>
 <div class="line">    queue.closePop();</div>
 <div class="line">    consumerThread.join();</div>
 <div class="line"> </div>
-<div class="line">    return 0;</div>
+<div class="line">    return EXIT_SUCCESS;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_queue_test.cpp">**_Thread Safe Queue Tests_**</a></p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Thread</h2>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">#include &quot;thread_safe/thread.hpp&quot;</div>
@@ -268,25 +246,25 @@ Thread</h2>
 <div class="line"> </div>
 <div class="line">    // Create a thread to run the task</div>
 <div class="line">    ThreadOnce thread_once(&quot;thread once&quot;);</div>
-<div class="line"> </div>
 <div class="line">    // Set a callback to be called when the thread starts</div>
 <div class="line">    thread_once.setStartCallback([]() -&gt; void</div>
 <div class="line">                                 { std::cout &lt;&lt; &quot;Thread started...&quot; &lt;&lt; std::endl; });</div>
-<div class="line"> </div>
 <div class="line">    // Set a callback to handle the result of the thread&#39;s task</div>
 <div class="line">    thread_once.setResultCallback([](const int&amp; result) -&gt; void</div>
 <div class="line">                                  { std::cout &lt;&lt; &quot;Task result: &quot; &lt;&lt; result &lt;&lt; std::endl; });</div>
-<div class="line"> </div>
 <div class="line">    // Set a callback to be called when the thread exits</div>
 <div class="line">    thread_once.setExitCallback([]() -&gt; void</div>
 <div class="line">                                { std::cout &lt;&lt; &quot;Thread finished.&quot; &lt;&lt; std::endl; });</div>
-<div class="line"> </div>
 <div class="line">    // Invoke task for thread</div>
 <div class="line">    thread_once.invoke(add_task, 7, 8);</div>
-<div class="line"> </div>
 <div class="line">    // Start the thread</div>
 <div class="line">    thread_once.start(ThreadOnce::RunMode::ONCE);</div>
-<div class="line"> </div>
+<div class="line">    // Wait for the thread to finish</div>
+<div class="line">    thread_once.stop();</div>
+<div class="line">    // Invoke task for thread</div>
+<div class="line">    thread_once.invoke(add_task, 99, 1);</div>
+<div class="line">    // Start the thread</div>
+<div class="line">    thread_once.start(ThreadOnce::RunMode::ONCE);</div>
 <div class="line">    // Wait for the thread to finish</div>
 <div class="line">    thread_once.stop();</div>
 <div class="line"> </div>
@@ -297,22 +275,17 @@ Thread</h2>
 <div class="line"> </div>
 <div class="line">    // Create a thread with a loop that performs the task repeatedly</div>
 <div class="line">    LoopingThread looping_thread(&quot;looping thread&quot;);</div>
-<div class="line"> </div>
 <div class="line">    // Set start callback</div>
 <div class="line">    looping_thread.setStartCallback([]() -&gt; void</div>
 <div class="line">                                    { std::cout &lt;&lt; &quot;Looping thread started...&quot; &lt;&lt; std::endl; });</div>
-<div class="line"> </div>
 <div class="line">    // Set result callback to print the result on each iteration</div>
 <div class="line">    looping_thread.setResultCallback([](const std::string&amp; result) -&gt; void</div>
 <div class="line">                                     { std::cout &lt;&lt; &quot;Loop result: &quot; &lt;&lt; result &lt;&lt; std::endl; });</div>
-<div class="line"> </div>
 <div class="line">    // Set an exit callback</div>
 <div class="line">    looping_thread.setExitCallback([]() -&gt; void</div>
 <div class="line">                                   { std::cout &lt;&lt; &quot;Looping thread finished.&quot; &lt;&lt; std::endl; });</div>
-<div class="line"> </div>
 <div class="line">    // Invoke task for thread</div>
 <div class="line">    looping_thread.invoke(count_task, 10);</div>
-<div class="line"> </div>
 <div class="line">    // Start the thread</div>
 <div class="line">    looping_thread.start(LoopingThread::RunMode::LOOP);</div>
 <div class="line"> </div>
@@ -331,7 +304,6 @@ Thread</h2>
 <div class="line"> </div>
 <div class="line">    // Create a thread that loops while a predicate is true</div>
 <div class="line">    PredThread pred_thread(&quot;PredicateThread&quot;);</div>
-<div class="line"> </div>
 <div class="line">    // Set result callback to print results and increment the count</div>
 <div class="line">    pred_thread.setResultCallback([&amp;iterationCount](const std::string&amp; result)</div>
 <div class="line">                                  {</div>
@@ -340,15 +312,12 @@ Thread</h2>
 <div class="line"> </div>
 <div class="line">    // Invoke task for thread</div>
 <div class="line">    pred_thread.invoke(count_task, 10);</div>
-<div class="line"> </div>
 <div class="line">    // Set predicate</div>
 <div class="line">    pred_thread.setPredicate([&amp;iterationCount]() -&gt; bool</div>
 <div class="line">                             {</div>
 <div class="line">            return iterationCount &lt; 5;  /*Stop after 5 iterations*/ });</div>
-<div class="line"> </div>
 <div class="line">    // Start the thread</div>
 <div class="line">    pred_thread.start(PredThread::RunMode::LOOP);</div>
-<div class="line"> </div>
 <div class="line">    // Simulate some work in the main thread while the loop runs</div>
 <div class="line">    simulateWork(1000);</div>
 <div class="line"> </div>
@@ -357,13 +326,67 @@ Thread</h2>
 <div class="line">    return 0;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_thread_test.cpp">**_Thread Safe Thread Tests_**</a></p>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Variable</h2>
 <p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_variable_test.cpp">**_Thread Safe Thread Tests_**</a></p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Wait</h2>
-<p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_wait_test.cpp">**_Thread Safe Thread Tests_**</a></p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<div class="fragment"><div class="line"> {c++}</div>
+<div class="line">#include &quot;thread_safe/wait.hpp&quot;</div>
+<div class="line"> </div>
+<div class="line">#include &lt;atomic&gt;</div>
+<div class="line">#include &lt;chrono&gt;</div>
+<div class="line">#include &lt;iostream&gt;</div>
+<div class="line">#include &lt;thread&gt;</div>
+<div class="line"> </div>
+<div class="line">int main()</div>
+<div class="line">{</div>
+<div class="line">    using Wait = ThreadSafe::Wait;</div>
+<div class="line">    Wait wait;</div>
+<div class="line">    // Thread 1: Will Timeout</div>
+<div class="line">    std::thread t1([&amp;]()</div>
+<div class="line">                   {</div>
+<div class="line">        std::cout &lt;&lt; &quot;[Thread 1]: Waiting for signal...&quot; &lt;&lt; std::endl;</div>
+<div class="line">        if (Wait::Status::TIMEOUT == wait.waitFor(std::chrono::milliseconds{100}))</div>
+<div class="line">        {</div>
+<div class="line">            std::cout &lt;&lt; &quot;[Thread 1]: Timeout!&quot; &lt;&lt; std::endl;</div>
+<div class="line">        }</div>
+<div class="line">        std::cout &lt;&lt; &quot;[Thread 1]: Leave!&quot; &lt;&lt; std::endl; });</div>
+<div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(10));</div>
+<div class="line">    // Thread 2: Wait Predicate</div>
+<div class="line">    std::atomic&lt;bool&gt; pred_flag{false};</div>
+<div class="line">    auto pred = [&amp;pred_flag]() -&gt; bool</div>
+<div class="line">    { return pred_flag; };</div>
+<div class="line">    std::thread t2([&amp;]()</div>
+<div class="line">                   {</div>
+<div class="line">    std::cout &lt;&lt; &quot;[Thread 2]: Waiting for predicate...&quot; &lt;&lt; std::endl;</div>
+<div class="line">    if (Wait::Status::SUCCESS == wait.wait(pred))</div>
+<div class="line">    {</div>
+<div class="line">        std::cout &lt;&lt; &quot;[Thread 2]: Predicate!&quot; &lt;&lt; std::endl;</div>
+<div class="line">    } </div>
+<div class="line">    std::cout &lt;&lt; &quot;[Thread 2]: Leave!&quot; &lt;&lt; std::endl; });</div>
+<div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(10));</div>
+<div class="line">    // Thread 3: Will Timeout</div>
+<div class="line">    std::thread t3([&amp;]()</div>
+<div class="line">                   {</div>
+<div class="line">    std::cout &lt;&lt; &quot;[Thread 3]: Waiting for predicate...&quot; &lt;&lt; std::endl;</div>
+<div class="line">    if (Wait::Status::TIMEOUT == wait.waitFor(std::chrono::milliseconds{200}, []()-&gt;bool{return false;}))</div>
+<div class="line">    {</div>
+<div class="line">        std::cout &lt;&lt; &quot;[Thread 3]: Timeout!&quot; &lt;&lt; std::endl;</div>
+<div class="line">    } </div>
+<div class="line">    std::cout &lt;&lt; &quot;[Thread 3]: Leave!&quot; &lt;&lt; std::endl; });</div>
+<div class="line"> </div>
+<div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(300));</div>
+<div class="line">    pred_flag = true;</div>
+<div class="line">    wait.notify();</div>
+<div class="line">    t1.join();</div>
+<div class="line">    t2.join();</div>
+<div class="line">    t3.join();</div>
+<div class="line"> </div>
+<div class="line">    return EXIT_SUCCESS;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_wait_test.cpp">**_Thread Safe Thread Tests_**</a></p>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Documentation</h1>
 <p>Full documentation can be found at <a href="https://tranglecong.github.io/thread_safe/html">https://tranglecong.github.io/thread_safe/html</a>. </p>
 </div></div><!-- PageDoc -->

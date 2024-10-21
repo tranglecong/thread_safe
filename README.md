@@ -9,21 +9,6 @@ The **Thread Safe Library** is a C++ library that provides utilities for managin
 - **Thread**: A thread manager that supports once mode and loop mode, can check results using callbacks and includes some other features.
 - **Wait**: A mechanism to safely handle thread waiting and signaling.
 
-## Table of Contents
-
-- [Thread Safe](#thread-safe)
-  - [Features](#features)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Intergration](#intergration)
-  - [Example](#example)
-    - [Queue](#queue)
-    - [Thread](#thread)
-    - [Variable](#variable)
-    - [Wait](#wait)
-  - [Documentation](#documentation)
-
 ## Installation
 
 ### Prerequisites
@@ -71,7 +56,7 @@ To use this library, you need:
     target_link_libraries(your_target PUBLIC thread_safe)
     ```
 
-## Example
+## Example Code
 
 ### Queue
 
@@ -79,6 +64,7 @@ To use this library, you need:
 #include "thread_safe/queue.hpp"
 
 #include <chrono>
+#include <cstdlib>
 #include <iostream>
 #include <ostream>
 #include <thread>
@@ -94,7 +80,6 @@ int main()
 
     // Create the thread-safe queue with the given settings
     Queue queue(settings);
-
     // Set a callback to be called when an element is discarded
     queue.setDiscardedCallback(
         [](const int& discardedElem)
@@ -147,7 +132,7 @@ int main()
     queue.closePop();
     consumerThread.join();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 ```
 
@@ -192,25 +177,25 @@ int main()
 
     // Create a thread to run the task
     ThreadOnce thread_once("thread once");
-
     // Set a callback to be called when the thread starts
     thread_once.setStartCallback([]() -> void
                                  { std::cout << "Thread started..." << std::endl; });
-
     // Set a callback to handle the result of the thread's task
     thread_once.setResultCallback([](const int& result) -> void
                                   { std::cout << "Task result: " << result << std::endl; });
-
     // Set a callback to be called when the thread exits
     thread_once.setExitCallback([]() -> void
                                 { std::cout << "Thread finished." << std::endl; });
-
     // Invoke task for thread
     thread_once.invoke(add_task, 7, 8);
-
     // Start the thread
     thread_once.start(ThreadOnce::RunMode::ONCE);
-
+    // Wait for the thread to finish
+    thread_once.stop();
+    // Invoke task for thread
+    thread_once.invoke(add_task, 99, 1);
+    // Start the thread
+    thread_once.start(ThreadOnce::RunMode::ONCE);
     // Wait for the thread to finish
     thread_once.stop();
 
@@ -221,22 +206,17 @@ int main()
 
     // Create a thread with a loop that performs the task repeatedly
     LoopingThread looping_thread("looping thread");
-
     // Set start callback
     looping_thread.setStartCallback([]() -> void
                                     { std::cout << "Looping thread started..." << std::endl; });
-
     // Set result callback to print the result on each iteration
     looping_thread.setResultCallback([](const std::string& result) -> void
                                      { std::cout << "Loop result: " << result << std::endl; });
-
     // Set an exit callback
     looping_thread.setExitCallback([]() -> void
                                    { std::cout << "Looping thread finished." << std::endl; });
-
     // Invoke task for thread
     looping_thread.invoke(count_task, 10);
-
     // Start the thread
     looping_thread.start(LoopingThread::RunMode::LOOP);
 
@@ -255,7 +235,6 @@ int main()
 
     // Create a thread that loops while a predicate is true
     PredThread pred_thread("PredicateThread");
-
     // Set result callback to print results and increment the count
     pred_thread.setResultCallback([&iterationCount](const std::string& result)
                                   {
@@ -264,15 +243,12 @@ int main()
 
     // Invoke task for thread
     pred_thread.invoke(count_task, 10);
-
     // Set predicate
     pred_thread.setPredicate([&iterationCount]() -> bool
                              {
             return iterationCount < 5;  /*Stop after 5 iterations*/ });
-
     // Start the thread
     pred_thread.start(PredThread::RunMode::LOOP);
-
     // Simulate some work in the main thread while the loop runs
     simulateWork(1000);
 
@@ -290,6 +266,62 @@ Refer to UT for more information on how to use it. [**_Thread Safe Thread Tests_
 Refer to UT for more information on how to use it. [**_Thread Safe Thread Tests_**](https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_variable_test.cpp)
 
 ### Wait
+
+```c++
+#include "thread_safe/wait.hpp"
+
+#include <atomic>
+#include <chrono>
+#include <iostream>
+#include <thread>
+
+int main()
+{
+    using Wait = ThreadSafe::Wait;
+    Wait wait;
+    // Thread 1: Will Timeout
+    std::thread t1([&]()
+                   {
+        std::cout << "[Thread 1]: Waiting for signal..." << std::endl;
+        if (Wait::Status::TIMEOUT == wait.waitFor(std::chrono::milliseconds{100}))
+        {
+            std::cout << "[Thread 1]: Timeout!" << std::endl;
+        }
+        std::cout << "[Thread 1]: Leave!" << std::endl; });
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    // Thread 2: Wait Predicate
+    std::atomic<bool> pred_flag{false};
+    auto pred = [&pred_flag]() -> bool
+    { return pred_flag; };
+    std::thread t2([&]()
+                   {
+    std::cout << "[Thread 2]: Waiting for predicate..." << std::endl;
+    if (Wait::Status::SUCCESS == wait.wait(pred))
+    {
+        std::cout << "[Thread 2]: Predicate!" << std::endl;
+    } 
+    std::cout << "[Thread 2]: Leave!" << std::endl; });
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    // Thread 3: Will Timeout
+    std::thread t3([&]()
+                   {
+    std::cout << "[Thread 3]: Waiting for predicate..." << std::endl;
+    if (Wait::Status::TIMEOUT == wait.waitFor(std::chrono::milliseconds{200}, []()->bool{return false;}))
+    {
+        std::cout << "[Thread 3]: Timeout!" << std::endl;
+    } 
+    std::cout << "[Thread 3]: Leave!" << std::endl; });
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    pred_flag = true;
+    wait.notify();
+    t1.join();
+    t2.join();
+    t3.join();
+
+    return EXIT_SUCCESS;
+}
+```
 
 Refer to UT for more information on how to use it. [**_Thread Safe Thread Tests_**](https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_wait_test.cpp)
 

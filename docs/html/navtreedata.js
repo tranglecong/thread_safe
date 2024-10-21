@@ -27,18 +27,17 @@ var NAVTREE =
   [ "Thread Safe Library", "index.html", [
     [ "Thread Safe", "index.html", [
       [ "Features", "index.html#autotoc_md1", null ],
-      [ "Table of Contents", "index.html#autotoc_md2", null ],
-      [ "Installation", "index.html#autotoc_md3", [
-        [ "Prerequisites", "index.html#autotoc_md4", null ],
-        [ "Intergration", "index.html#autotoc_md5", null ]
+      [ "Installation", "index.html#autotoc_md2", [
+        [ "Prerequisites", "index.html#autotoc_md3", null ],
+        [ "Intergration", "index.html#autotoc_md4", null ]
       ] ],
-      [ "Example", "index.html#autotoc_md6", [
-        [ "Queue", "index.html#autotoc_md7", null ],
-        [ "Thread", "index.html#autotoc_md8", null ],
-        [ "Variable", "index.html#autotoc_md9", null ],
-        [ "Wait", "index.html#autotoc_md10", null ]
+      [ "Example Code", "index.html#autotoc_md5", [
+        [ "Queue", "index.html#autotoc_md6", null ],
+        [ "Thread", "index.html#autotoc_md7", null ],
+        [ "Variable", "index.html#autotoc_md8", null ],
+        [ "Wait", "index.html#autotoc_md9", null ]
       ] ],
-      [ "Documentation", "index.html#autotoc_md11", null ]
+      [ "Documentation", "index.html#autotoc_md10", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
