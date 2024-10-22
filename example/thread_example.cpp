@@ -33,7 +33,6 @@ int main()
     using ThreadOnce = ThreadSafe::Thread<>;
     using LoopingThread = ThreadSafe::Thread<std::string>;
     using PredThread = ThreadSafe::Thread<std::string>;
-    using DefaultResultThread = ThreadSafe::Thread<void>;
 
     // Example 1: Run the task once
     std::cout << "Example 1: Run the task once" << std::endl;
