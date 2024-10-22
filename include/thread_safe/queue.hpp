@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common.hpp"
 #include "wait.hpp"
 
 #include <atomic>
@@ -80,10 +81,7 @@ public:
     ~Queue();
 
     // Make this class uncopyable
-    Queue(const Queue&) = delete;
-    Queue& operator=(const Queue&) = delete;
-    Queue(Queue&&) = delete;
-    Queue& operator=(Queue&&) = delete;
+    UNCOPYABLE(Queue);
 
     /**
      * @brief Set the callback for discarded elements.

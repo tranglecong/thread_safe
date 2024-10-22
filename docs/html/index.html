@@ -217,19 +217,24 @@ Thread</h2>
 <div class="line">#include &lt;string&gt;</div>
 <div class="line">#include &lt;thread&gt;</div>
 <div class="line"> </div>
-<div class="line">int add_task(int a, int b)</div>
+<div class="line">void print(const std::string msg)</div>
+<div class="line">{</div>
+<div class="line">    std::cout &lt;&lt; msg &lt;&lt; std::endl;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">int addTask(int a, int b)</div>
 <div class="line">{</div>
 <div class="line">    return a + b;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">std::string count_task(int start)</div>
+<div class="line">std::string countTask(int start)</div>
 <div class="line">{</div>
 <div class="line">    static int count{start};</div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(100));</div>
 <div class="line">    return std::string{&quot;count = &quot;} + std::string{std::to_string(count++)};</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">// Helper function to simulate work by sleeping for a few seconds</div>
+<div class="line">// Helper function to simulate work by sleeping</div>
 <div class="line">void simulateWork(int duration_ms)</div>
 <div class="line">{</div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(duration_ms));</div>
@@ -237,34 +242,30 @@ Thread</h2>
 <div class="line"> </div>
 <div class="line">int main()</div>
 <div class="line">{</div>
-<div class="line">    using ThreadOnce = ThreadSafe::Thread&lt;int, int, int&gt;;</div>
-<div class="line">    using LoopingThread = ThreadSafe::Thread&lt;std::string, int&gt;;</div>
-<div class="line">    using PredThread = ThreadSafe::Thread&lt;std::string, int&gt;;</div>
+<div class="line">    using ThreadOnce = ThreadSafe::Thread&lt;&gt;;</div>
+<div class="line">    using LoopingThread = ThreadSafe::Thread&lt;std::string&gt;;</div>
+<div class="line">    using PredThread = ThreadSafe::Thread&lt;std::string&gt;;</div>
+<div class="line">    using DefaultResultThread = ThreadSafe::Thread&lt;void&gt;;</div>
 <div class="line"> </div>
 <div class="line">    // Example 1: Run the task once</div>
 <div class="line">    std::cout &lt;&lt; &quot;Example 1: Run the task once&quot; &lt;&lt; std::endl;</div>
 <div class="line"> </div>
-<div class="line">    // Create a thread to run the task</div>
-<div class="line">    ThreadOnce thread_once(&quot;thread once&quot;);</div>
-<div class="line">    // Set a callback to be called when the thread starts</div>
+<div class="line">    ThreadOnce thread_once{&quot;thread once&quot;};</div>
 <div class="line">    thread_once.setStartCallback([]() -&gt; void</div>
 <div class="line">                                 { std::cout &lt;&lt; &quot;Thread started...&quot; &lt;&lt; std::endl; });</div>
-<div class="line">    // Set a callback to handle the result of the thread&#39;s task</div>
-<div class="line">    thread_once.setResultCallback([](const int&amp; result) -&gt; void</div>
-<div class="line">                                  { std::cout &lt;&lt; &quot;Task result: &quot; &lt;&lt; result &lt;&lt; std::endl; });</div>
-<div class="line">    // Set a callback to be called when the thread exits</div>
+<div class="line">    thread_once.setResultCallback([]() -&gt; void</div>
+<div class="line">                                  { std::cout &lt;&lt; &quot;Result callback called! &quot; &lt;&lt; std::endl; });</div>
 <div class="line">    thread_once.setExitCallback([]() -&gt; void</div>
 <div class="line">                                { std::cout &lt;&lt; &quot;Thread finished.&quot; &lt;&lt; std::endl; });</div>
 <div class="line">    // Invoke task for thread</div>
-<div class="line">    thread_once.invoke(add_task, 7, 8);</div>
-<div class="line">    // Start the thread</div>
-<div class="line">    thread_once.start(ThreadOnce::RunMode::ONCE);</div>
+<div class="line">    thread_once.invoke(print, &quot;Hello World&quot;);</div>
+<div class="line">    thread_once.run(ThreadOnce::RunMode::ONCE);</div>
 <div class="line">    // Wait for the thread to finish</div>
 <div class="line">    thread_once.stop();</div>
+<div class="line"> </div>
 <div class="line">    // Invoke task for thread</div>
-<div class="line">    thread_once.invoke(add_task, 99, 1);</div>
-<div class="line">    // Start the thread</div>
-<div class="line">    thread_once.start(ThreadOnce::RunMode::ONCE);</div>
+<div class="line">    thread_once.invoke(print, &quot;From Thread&lt;&gt;&quot;);</div>
+<div class="line">    thread_once.run(ThreadOnce::RunMode::ONCE);</div>
 <div class="line">    // Wait for the thread to finish</div>
 <div class="line">    thread_once.stop();</div>
 <div class="line"> </div>
@@ -273,26 +274,19 @@ Thread</h2>
 <div class="line">    // Example 2: Run a task in a loop until stopped</div>
 <div class="line">    std::cout &lt;&lt; &quot;Example 2: Run the task in a loop&quot; &lt;&lt; std::endl;</div>
 <div class="line"> </div>
-<div class="line">    // Create a thread with a loop that performs the task repeatedly</div>
-<div class="line">    LoopingThread looping_thread(&quot;looping thread&quot;);</div>
-<div class="line">    // Set start callback</div>
+<div class="line">    LoopingThread looping_thread{&quot;looping thread&quot;};</div>
 <div class="line">    looping_thread.setStartCallback([]() -&gt; void</div>
 <div class="line">                                    { std::cout &lt;&lt; &quot;Looping thread started...&quot; &lt;&lt; std::endl; });</div>
-<div class="line">    // Set result callback to print the result on each iteration</div>
-<div class="line">    looping_thread.setResultCallback([](const std::string&amp; result) -&gt; void</div>
+<div class="line">    looping_thread.setResultCallback([](const LoopingThread::ResultType&amp; result) -&gt; void</div>
 <div class="line">                                     { std::cout &lt;&lt; &quot;Loop result: &quot; &lt;&lt; result &lt;&lt; std::endl; });</div>
-<div class="line">    // Set an exit callback</div>
 <div class="line">    looping_thread.setExitCallback([]() -&gt; void</div>
 <div class="line">                                   { std::cout &lt;&lt; &quot;Looping thread finished.&quot; &lt;&lt; std::endl; });</div>
-<div class="line">    // Invoke task for thread</div>
-<div class="line">    looping_thread.invoke(count_task, 10);</div>
-<div class="line">    // Start the thread</div>
-<div class="line">    looping_thread.start(LoopingThread::RunMode::LOOP);</div>
+<div class="line"> </div>
+<div class="line">    looping_thread.invoke(countTask, 10);</div>
+<div class="line">    looping_thread.run(LoopingThread::RunMode::LOOP);</div>
 <div class="line"> </div>
 <div class="line">    // Simulate some work in the main thread while the loop runs</div>
 <div class="line">    simulateWork(1050);</div>
-<div class="line"> </div>
-<div class="line">    // Stop the loop</div>
 <div class="line">    looping_thread.stop();</div>
 <div class="line"> </div>
 <div class="line">    std::cout &lt;&lt; &quot;\n&quot;;</div>
@@ -300,30 +294,27 @@ Thread</h2>
 <div class="line">    // Example 3: Running a predicate-controlled loop</div>
 <div class="line">    std::cout &lt;&lt; &quot;Example 3: Loop with a predicate (runs 5 times)&quot; &lt;&lt; std::endl;</div>
 <div class="line"> </div>
-<div class="line">    int iterationCount = 0;</div>
-<div class="line"> </div>
-<div class="line">    // Create a thread that loops while a predicate is true</div>
-<div class="line">    PredThread pred_thread(&quot;PredicateThread&quot;);</div>
+<div class="line">    int iteration_count = 0;</div>
+<div class="line">    PredThread pred_thread{&quot;PredicateThread&quot;};</div>
 <div class="line">    // Set result callback to print results and increment the count</div>
-<div class="line">    pred_thread.setResultCallback([&amp;iterationCount](const std::string&amp; result)</div>
+<div class="line">    pred_thread.setResultCallback([&amp;iteration_count](const PredThread::ResultType&amp; result) -&gt; void</div>
 <div class="line">                                  {</div>
 <div class="line">        std::cout &lt;&lt; &quot;Predicate loop result: &quot; &lt;&lt; result &lt;&lt; std::endl;</div>
-<div class="line">        iterationCount++; });</div>
+<div class="line">        iteration_count++; });</div>
 <div class="line"> </div>
-<div class="line">    // Invoke task for thread</div>
-<div class="line">    pred_thread.invoke(count_task, 10);</div>
+<div class="line">    pred_thread.invoke(countTask, 10);</div>
 <div class="line">    // Set predicate</div>
-<div class="line">    pred_thread.setPredicate([&amp;iterationCount]() -&gt; bool</div>
+<div class="line">    pred_thread.setPredicate([&amp;iteration_count]() -&gt; bool</div>
 <div class="line">                             {</div>
-<div class="line">            return iterationCount &lt; 5;  /*Stop after 5 iterations*/ });</div>
-<div class="line">    // Start the thread</div>
-<div class="line">    pred_thread.start(PredThread::RunMode::LOOP);</div>
+<div class="line">            return iteration_count &lt; 5;  /*Stop after 5 iterations*/ });</div>
+<div class="line"> </div>
+<div class="line">    pred_thread.run(PredThread::RunMode::LOOP);</div>
 <div class="line">    // Simulate some work in the main thread while the loop runs</div>
 <div class="line">    simulateWork(1000);</div>
 <div class="line"> </div>
 <div class="line">    std::cout &lt;&lt; &quot;Predicate-controlled loop completed.&quot; &lt;&lt; std::endl;</div>
 <div class="line"> </div>
-<div class="line">    return 0;</div>
+<div class="line">    return EXIT_SUCCESS;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_thread_test.cpp"><em>Thread Safe Thread Tests</em></a></p>
 <h2><a class="anchor" id="autotoc_md8"></a>

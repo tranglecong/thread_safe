@@ -1,18 +1,11 @@
 #pragma once
 
+#include "common.hpp"
+
 #include <mutex>
 
 namespace ThreadSafe
 {
-
-#define ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(op, name)                                                             \
-    template<typename T, typename... Args>                                                                           \
-    auto t_class_support_##name##_operator(int)->decltype(std::declval<T>() op std::declval<T>(), std::true_type{}); \
-    template<typename, typename...>                                                                                  \
-    auto t_class_support_##name##_operator(...)->std::false_type;                                                    \
-    template<typename T, typename... Args>                                                                           \
-    inline constexpr bool has_##name##_operator_for_t_class =                                                        \
-        decltype(t_class_support_##name##_operator<T, Args...>(0))::value;
 
 #define COMPARISON_OPERATOR_IMPL(op, name)                                                                        \
     template<typename... Args>                                                                                    \
@@ -23,13 +16,6 @@ namespace ThreadSafe
         std::lock_guard<std::mutex> guard{m_lock};                                                                \
         return (m_value op T(static_cast<Args&&>(args)...));                                                      \
     }
-
-ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(==, equal);
-ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(!=, not_equal);
-ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(<, less);
-ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(<=, less_or_equal);
-ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(>, greater);
-ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(>=, greater_or_equal);
 
 /**
  * @brief A thread-safe wrapper for a variable of type T.
@@ -71,10 +57,7 @@ public:
     }
 
     // Make this class uncopyable
-    Variable(const Variable&) = delete;
-    Variable& operator=(const Variable&) = delete;
-    Variable(Variable&&) = delete;
-    Variable& operator=(Variable&&) = delete;
+    UNCOPYABLE(Variable);
 
     /**
      * @brief Thread-safe assignment operator.
@@ -167,7 +150,6 @@ public:
         std::lock_guard<std::mutex> guard(m_lock);
         return (m_value.*func)(std::forward<Args>(args)...);
     }
-    
 
     /**
      * @brief Invokes a const member function on the stored value.

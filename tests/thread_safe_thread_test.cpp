@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <string>
 
-using Thread = ThreadSafe::Thread<int, int, std::string>;
+using Thread = ThreadSafe::Thread<int>;
 
 // Mock function to simulate a thread task
 int mockTask(int num, const std::string& message)
@@ -48,7 +48,7 @@ TEST(ThreadTest, InvokeAndRunThread)
     thread.setExitCallback(mockExit);
 
     // Start the thread
-    EXPECT_TRUE(thread.start(Thread::Thread::RunMode::ONCE)); // Ensure the thread started successfully
+    EXPECT_TRUE(thread.run(Thread::Thread::RunMode::ONCE)); // Ensure the thread started successfully
 
     // Simulate a short delay to allow thread execution
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -73,7 +73,7 @@ TEST(ThreadTest, SetCallbacksAndRunThread)
     thread.setExitCallback(mockExit);
 
     // Start the thread
-    EXPECT_TRUE(thread.start(Thread::RunMode::ONCE));
+    EXPECT_TRUE(thread.run(Thread::RunMode::ONCE));
 
     // Simulate a short delay to allow thread execution
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -97,7 +97,7 @@ TEST(ThreadTest, StopThread)
     thread.setExitCallback(mockExit);
 
     // Start the thread
-    thread.start(Thread::RunMode::LOOP);
+    thread.run(Thread::RunMode::LOOP);
 
     // Stop the thread
     bool stop_result = thread.stop();
@@ -135,7 +135,7 @@ TEST(ThreadTest, RunLoopWithPredicate)
     thread.setExitCallback(mockExit);
 
     // Start the thread in loop mode
-    EXPECT_TRUE(thread.start(Thread::RunMode::LOOP));
+    EXPECT_TRUE(thread.run(Thread::RunMode::LOOP));
 
     // Increment the counter in the main thread to allow the predicate to stop the loop
     while (counter < 5)
@@ -176,7 +176,7 @@ TEST(ThreadTest, StopLoopManually)
     thread.setExitCallback(mockExit);
 
     // Start the thread in loop mode
-    EXPECT_TRUE(thread.start(Thread::RunMode::LOOP));
+    EXPECT_TRUE(thread.run(Thread::RunMode::LOOP));
 
     // Simulate the loop running for a short time
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -223,7 +223,7 @@ TEST(ThreadTest, StartStopMultipleTimes)
     thread.setExitCallback(mockExit);
 
     // Start the thread
-    EXPECT_TRUE(thread.start(Thread::RunMode::LOOP));
+    EXPECT_TRUE(thread.run(Thread::RunMode::LOOP));
     std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Run for a short time
 
     // First stop the thread
@@ -231,7 +231,7 @@ TEST(ThreadTest, StartStopMultipleTimes)
     EXPECT_EQ(stop_counter.load(), 1); // Ensure the thread was stopped after 5 iterations
 
     // Start the thread again
-    EXPECT_TRUE(thread.start(Thread::RunMode::LOOP));
+    EXPECT_TRUE(thread.run(Thread::RunMode::LOOP));
     loop_counter = 0; // Reset counter for the second run
 
     // Simulate running the thread for a while again
@@ -242,7 +242,7 @@ TEST(ThreadTest, StartStopMultipleTimes)
     EXPECT_EQ(stop_counter.load(), 1); // Ensure the thread was stopped after another 5 iterations
 
     // Start the thread once more
-    EXPECT_TRUE(thread.start(Thread::RunMode::LOOP));
+    EXPECT_TRUE(thread.run(Thread::RunMode::LOOP));
     loop_counter = 0; // Reset counter for the third run
 
     // Simulate running the thread for a while again

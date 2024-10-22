@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common.hpp"
+
 #include <atomic>
 #include <cstdint>
 #include <functional>
@@ -7,6 +9,7 @@
 #include <map>
 #include <memory>
 #include <thread>
+#include <type_traits>
 
 namespace ThreadSafe
 {
@@ -39,19 +42,38 @@ const NativeThreadPrioritys& defaultNativeThreadPrioritys();
  */
 void setNaitiveThreadPriority(ThreadPriority priority, const std::thread::native_handle_type native_handle);
 
+namespace Trait
+{
+/**
+ * @brief Template struct to define the callback type for thread results.
+ * @tparam T The type of the result.
+ */
+template<typename T>
+struct ThreadResultCallbackType
+{
+    using type = std::function<void(const T&)>;
+};
+
+template<>
+struct ThreadResultCallbackType<void>
+{
+    using type = std::function<void()>;
+};
+} // namespace Trait
+
 /**
  * @brief A thread class that supports custom functions, thread priorities, and callbacks.
- * @tparam Return The return type of the function.
- * @tparam ArgTypes The types of the arguments for the function.
+ * @tparam Result The type of the result returned by the thread function.
  */
-template<typename Return, typename... ArgTypes>
+template<typename Result = std::void_t<>>
 class Thread
 {
 public:
     using Callback = std::function<void()>;
-    using ResultCallback = std::function<void(const Return&)>;
-    using Func = std::function<Return(ArgTypes...)>;
+    using ResultCallback = typename Trait::ThreadResultCallbackType<Result>::type;
+    using Callable = std::function<Result()>;
     using Pred = std::function<bool()>;
+    using ResultType = Result;
 
     /**
      * @brief Enum to represent whether the thread should run once or in a loop.
@@ -67,7 +89,6 @@ public:
      * @param name The name of the thread.
      * @param priority The priority of the thread.
      */
-    template<class... Args>
     Thread(const std::string& name, const ThreadPriority priority = ThreadPriority::NORMAL)
         : m_name{name}
         , m_priority{priority}
@@ -83,35 +104,30 @@ public:
     }
 
     // Make this class uncopyable
-    Thread(const Thread&) = delete;
-    Thread& operator=(const Thread&) = delete;
-    Thread(Thread&&) = delete;
-    Thread& operator=(Thread&&) = delete;
+    UNCOPYABLE(Thread);
 
     /**
      * @brief Sets the function and its arguments before starting the thread.
      * This function stores the function and arguments to be invoked when the thread is run.
+     * @tparam Func The types of the function.
      * @tparam Args The types of arguments for the function.
      * @param func The function to be executed.
      * @param args The arguments to be passed to the function.
      * @return `true` if the function and arguments were successfully set, `false` otherwise.
      */
-    template<class... Args>
-    bool invoke(Func func, Args&&... args)
+    template<typename Func, typename... Args>
+    bool invoke(Func func, Args&&... args) noexcept(std::is_nothrow_invocable_v<Func, Args...>)
     {
         if (m_thread_ptr != nullptr)
         {
             return false;
         }
-        try
+
+        // Store the function (converted to std::function<Result()>)
+        m_callable = [func, tuple_args = std::tuple<Args...>(std::forward<Args>(args)...)]() mutable
         {
-            m_func = func;
-            m_args = std::tuple<ArgTypes...>(std::forward<Args>(args)...);
-        }
-        catch (std::exception e)
-        {
-            return false;
-        }
+            return std::apply(func, tuple_args);
+        };
         return true;
     }
 
@@ -154,16 +170,16 @@ public:
 
     /**
      * @brief Starts the thread.
-     * @param loop Whether the thread should run once or in a loop.
+     * @param mode Whether the thread should run once or in a loop.
      * @return `true` if start sucessfull, `false` otherwise.
      */
-    bool start(const RunMode mode)
+    bool run(const RunMode mode)
     {
         if (m_thread_ptr != nullptr)
         {
             return false;
         }
-        if (!m_func)
+        if (!m_callable)
         {
             return false;
         }
@@ -173,7 +189,7 @@ public:
             m_loop.store(true, std::memory_order_release);
         }
         m_thread_ptr = std::make_unique<std::thread>([this]()
-                                                     { run(); });
+                                                     { loop(); });
         return true;
     }
     /**
@@ -206,8 +222,7 @@ public:
 
 private:
     const std::string m_name;
-    Func m_func{nullptr};
-    std::tuple<ArgTypes...> m_args{};
+    Callable m_callable{nullptr};
     std::atomic<bool> m_loop{true};
     ThreadPriority m_priority;
     Pred m_pred{};
@@ -219,7 +234,7 @@ private:
     /**
      * @brief The main loop function that runs the thread.
      */
-    void run()
+    void loop()
     {
         setNaitiveThreadPriority(m_priority, m_thread_ptr->native_handle());
         startCallback();
@@ -237,11 +252,25 @@ private:
      */
     void call()
     {
-        Return result{std::apply(m_func, m_args)};
-        if (m_result_callback)
+        if (m_callable)
         {
-            m_result_callback(result);
-        };
+            if constexpr (std::is_void_v<Result>)
+            {
+                m_callable();
+                if (m_result_callback)
+                {
+                    m_result_callback();
+                };
+            }
+            else
+            {
+                Result result{m_callable()};
+                if (m_result_callback)
+                {
+                    m_result_callback(result);
+                };
+            }
+        }
     }
 
     /**

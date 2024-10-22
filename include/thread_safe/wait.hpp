@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common.hpp"
+
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -37,11 +39,7 @@ public:
     ~Wait();
 
     // Make this class uncopyable
-    Wait(const Wait&) = delete;
-    Wait& operator=(const Wait&) = delete;
-    Wait(Wait&&) = delete;
-    Wait& operator=(Wait&&) = delete;
-
+    UNCOPYABLE(Wait);
     /**
      * @brief Notify all waiting threads.
      *

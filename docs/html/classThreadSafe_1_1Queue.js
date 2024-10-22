@@ -20,17 +20,14 @@ var classThreadSafe_1_1Queue =
     ] ],
     [ "Queue", "classThreadSafe_1_1Queue.html#aac87cf3e7e64d3d8372fd6e4b2e435ee", null ],
     [ "~Queue", "classThreadSafe_1_1Queue.html#ad5b019bda1ce45b537913c885eb8b5d3", null ],
-    [ "Queue", "classThreadSafe_1_1Queue.html#ac7068eb12d76e9bace3b8f8c9ed7e603", null ],
-    [ "Queue", "classThreadSafe_1_1Queue.html#a98ebfe75b9d09821360a991b0a451683", null ],
     [ "closePop", "classThreadSafe_1_1Queue.html#a9a70981a0d72bdbbf7f547a078395b4e", null ],
     [ "closePush", "classThreadSafe_1_1Queue.html#ae03b7a9d6229a724268546811ce3a3e4", null ],
     [ "openPop", "classThreadSafe_1_1Queue.html#a314813b03cf585b257a460cd220002ca", null ],
     [ "openPush", "classThreadSafe_1_1Queue.html#a8e83e996a6a5852da13974af5381fbdf", null ],
-    [ "operator=", "classThreadSafe_1_1Queue.html#a637ea86f8f06807e29ff144a56481c59", null ],
-    [ "operator=", "classThreadSafe_1_1Queue.html#abb7b42d400ca56d3e07f6f8612ac82fe", null ],
     [ "pop", "classThreadSafe_1_1Queue.html#acaf9ad759feaa198b0f578ef00e4bd29", null ],
     [ "push", "classThreadSafe_1_1Queue.html#a6ea7c2fa1195dacac1d7be4fe86e1257", null ],
     [ "setDiscardedCallback", "classThreadSafe_1_1Queue.html#aef55487807d53227160a992acef834b9", null ],
+    [ "UNCOPYABLE", "classThreadSafe_1_1Queue.html#a96498c889599f718e150639360c25d69", null ],
     [ "waitPopOpen", "classThreadSafe_1_1Queue.html#ada33b5d5e9082ea86f9b30125003caa0", null ],
     [ "waitPushOpen", "classThreadSafe_1_1Queue.html#a7b94a6a1f6e0ff3484a5a120044fcb55", null ]
 ];
