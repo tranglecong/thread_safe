@@ -206,7 +206,7 @@ Queue</h2>
 <div class="line"> </div>
 <div class="line">    return EXIT_SUCCESS;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_queue_test.cpp">**_Thread Safe Queue Tests_**</a></p>
+</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_queue_test.cpp"><em>Thread Safe Queue Tests</em></a></p>
 <h2><a class="anchor" id="autotoc_md7"></a>
 Thread</h2>
 <div class="fragment"><div class="line"> {c++}</div>
@@ -325,10 +325,77 @@ Thread</h2>
 <div class="line"> </div>
 <div class="line">    return 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_thread_test.cpp">**_Thread Safe Thread Tests_**</a></p>
+</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_thread_test.cpp"><em>Thread Safe Thread Tests</em></a></p>
 <h2><a class="anchor" id="autotoc_md8"></a>
 Variable</h2>
-<p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_variable_test.cpp">**_Thread Safe Thread Tests_**</a></p>
+<div class="fragment"><div class="line"> {c++}</div>
+<div class="line">#include &quot;thread_safe/variable.hpp&quot;</div>
+<div class="line"> </div>
+<div class="line">#include &lt;atomic&gt;</div>
+<div class="line">#include &lt;chrono&gt;</div>
+<div class="line">#include &lt;cstdlib&gt;</div>
+<div class="line">#include &lt;iostream&gt;</div>
+<div class="line">#include &lt;ostream&gt;</div>
+<div class="line">#include &lt;string&gt;</div>
+<div class="line">#include &lt;thread&gt;</div>
+<div class="line"> </div>
+<div class="line">// Helper function to simulate work by sleeping</div>
+<div class="line">void simulateWork(int duration_ms)</div>
+<div class="line">{</div>
+<div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(duration_ms));</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">int main()</div>
+<div class="line">{</div>
+<div class="line">    using Variable = ThreadSafe::Variable&lt;std::string&gt;;</div>
+<div class="line"> </div>
+<div class="line">    Variable var{&quot;Initial&quot;};</div>
+<div class="line">    std::atomic&lt;bool&gt; running{true};</div>
+<div class="line"> </div>
+<div class="line">    // Reading and print out value</div>
+<div class="line">    std::thread readingThread{[&amp;]() -&gt; void</div>
+<div class="line">                              {</div>
+<div class="line">                                  static std::string previous_value{};</div>
+<div class="line">                                  while (running)</div>
+<div class="line">                                  {</div>
+<div class="line">                                      if (var != previous_value)</div>
+<div class="line">                                      {</div>
+<div class="line">                                          previous_value = var;</div>
+<div class="line">                                          std::cout &lt;&lt; &quot;Current value: &quot; &lt;&lt; var.get() &lt;&lt; std::endl;</div>
+<div class="line">                                      }</div>
+<div class="line">                                      std::this_thread::sleep_for(std::chrono::milliseconds(1));</div>
+<div class="line">                                  };</div>
+<div class="line">                              }};</div>
+<div class="line">    // Change value by assignment operator</div>
+<div class="line">    simulateWork(10);</div>
+<div class="line">    var = &quot;0&quot;;</div>
+<div class="line">    simulateWork(10);</div>
+<div class="line">    // Use invoke to call member function</div>
+<div class="line">    var.invoke([](std::string&amp; s)</div>
+<div class="line">               { s.append(&quot;1&quot;); });</div>
+<div class="line"> </div>
+<div class="line">    std::cout &lt;&lt; &quot;Current size: &quot; &lt;&lt; var.invoke([](const std::string&amp; s)</div>
+<div class="line">                                                { return s.size(); })</div>
+<div class="line">              &lt;&lt; std::endl;</div>
+<div class="line"> </div>
+<div class="line">    simulateWork(10);</div>
+<div class="line">    // Use comparison operator</div>
+<div class="line">    var = &quot;Example&quot;;</div>
+<div class="line">    std::cout &lt;&lt; (var == &quot;Example&quot;) &lt;&lt; std::endl;</div>
+<div class="line">    std::cout &lt;&lt; (var != &quot;Example&quot;) &lt;&lt; std::endl;</div>
+<div class="line">    std::cout &lt;&lt; (var &gt;= &quot;Example&quot;) &lt;&lt; std::endl;</div>
+<div class="line">    std::cout &lt;&lt; (var &lt;= &quot;Example&quot;) &lt;&lt; std::endl;</div>
+<div class="line">    std::cout &lt;&lt; (var &gt; &quot;Example&quot;) &lt;&lt; std::endl;</div>
+<div class="line">    std::cout &lt;&lt; (var &lt; &quot;Example&quot;) &lt;&lt; std::endl;</div>
+<div class="line"> </div>
+<div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(100));</div>
+<div class="line"> </div>
+<div class="line">    running = false;</div>
+<div class="line">    readingThread.join();</div>
+<div class="line"> </div>
+<div class="line">    return EXIT_SUCCESS;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_variable_test.cpp"><em>Thread Safe Thread Tests</em></a></p>
 <h2><a class="anchor" id="autotoc_md9"></a>
 Wait</h2>
 <div class="fragment"><div class="line"> {c++}</div>
@@ -385,7 +452,7 @@ Wait</h2>
 <div class="line"> </div>
 <div class="line">    return EXIT_SUCCESS;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_wait_test.cpp">**_Thread Safe Thread Tests_**</a></p>
+</div><!-- fragment --><p>Refer to UT for more information on how to use it. <a href="https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_wait_test.cpp"><em>Thread Safe Thread Tests</em></a></p>
 <h1><a class="anchor" id="autotoc_md10"></a>
 Documentation</h1>
 <p>Full documentation can be found at <a href="https://tranglecong.github.io/thread_safe/html">https://tranglecong.github.io/thread_safe/html</a>. </p>

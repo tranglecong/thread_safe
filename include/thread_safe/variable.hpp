@@ -5,6 +5,32 @@
 namespace ThreadSafe
 {
 
+#define ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(op, name)                                                             \
+    template<typename T, typename... Args>                                                                           \
+    auto t_class_support_##name##_operator(int)->decltype(std::declval<T>() op std::declval<T>(), std::true_type{}); \
+    template<typename, typename...>                                                                                  \
+    auto t_class_support_##name##_operator(...)->std::false_type;                                                    \
+    template<typename T, typename... Args>                                                                           \
+    inline constexpr bool has_##name##_operator_for_t_class =                                                        \
+        decltype(t_class_support_##name##_operator<T, Args...>(0))::value;
+
+#define COMPARISON_OPERATOR_IMPL(op, name)                                                                        \
+    template<typename... Args>                                                                                    \
+    std::enable_if_t<has_##name##_operator_for_t_class<T, Args...> && std::is_constructible<T, Args&&...>::value, \
+                     bool>                                                                                        \
+    operator op(Args&&... args)                                                                                   \
+    {                                                                                                             \
+        std::lock_guard<std::mutex> guard{m_lock};                                                                \
+        return (m_value op T(static_cast<Args&&>(args)...));                                                      \
+    }
+
+ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(==, equal);
+ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(!=, not_equal);
+ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(<, less);
+ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(<=, less_or_equal);
+ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(>, greater);
+ADD_HAS_COMPARISON_OPERATOR_TYPE_CHECK(>=, greater_or_equal);
+
 /**
  * @brief A thread-safe wrapper for a variable of type T.
  *
@@ -55,97 +81,25 @@ public:
      *
      * Assigns a new value to the variable, protected by a mutex lock.
      *
-     * @param value The new value to assign.
+     * @param args The new value to assign.
      */
-    void operator=(const T& value)
+
+    template<typename... Args>
+    std::enable_if_t<std::is_constructible<T, Args&&...>::value, void> operator=(Args&&... args)
     {
         std::lock_guard<std::mutex> guard{m_lock};
-        m_value = value;
+        m_value = T(static_cast<Args&&>(args)...);
     }
 
     /**
-     * @brief Thread-safe equality comparison operator.
-     *
-     * Compares the current value of the variable with another value.
-     *
-     * @param value The value to compare against.
-     * @return True if the values are equal, false otherwise.
+     * @brief Thread-safe comparison operator.
      */
-    bool operator==(const T& value)
-    {
-        std::lock_guard<std::mutex> guard{m_lock};
-        return (m_value == value);
-    }
-
-    /**
-     * @brief Thread-safe inequality comparison operator.
-     *
-     * Compares the current value of the variable with another value.
-     *
-     * @param value The value to compare against.
-     * @return True if the values are not equal, false otherwise.
-     */
-    bool operator!=(const T& value)
-    {
-        std::lock_guard<std::mutex> guard{m_lock};
-        return (m_value != value);
-    }
-
-    /**
-     * @brief Thread-safe less than comparison operator.
-     *
-     * Compares the current value of the variable to another value.
-     *
-     * @param value The value to compare against.
-     * @return True if the current value is less than the given value, false otherwise.
-     */
-    bool operator<(const T& value)
-    {
-        std::lock_guard<std::mutex> guard{m_lock};
-        return (m_value < value);
-    }
-
-    /**
-     * @brief Thread-safe greater than comparison operator.
-     *
-     * Compares the current value of the variable to another value.
-     *
-     * @param value The value to compare against.
-     * @return True if the current value is greater than the given value, false otherwise.
-     */
-    bool operator>(const T& value)
-    {
-        std::lock_guard<std::mutex> guard{m_lock};
-        return (m_value > value);
-    }
-
-    /**
-     * @brief Thread-safe less than or equal to comparison operator.
-     *
-     * Compares the current value of the variable to another value.
-     *
-     * @param value The value to compare against.
-     * @return True if the current value is less than or equal to the given value, false otherwise.
-     */
-    bool operator<=(const T& value)
-    {
-        std::lock_guard<std::mutex> guard{m_lock};
-        return (m_value <= value);
-    }
-
-    /**
-     * @brief Thread-safe greater than or equal to comparison operator.
-     *
-     * Compares the current value of the variable to another value.
-     *
-     * @param value The value to compare against.
-     * @return True if the current value is greater than or equal to the given value, false otherwise.
-     */
-    bool operator>=(const T& value)
-    {
-        std::lock_guard<std::mutex> guard{m_lock};
-        return (m_value >= value);
-    }
+    COMPARISON_OPERATOR_IMPL(==, equal);
+    COMPARISON_OPERATOR_IMPL(!=, not_equal);
+    COMPARISON_OPERATOR_IMPL(<, less);
+    COMPARISON_OPERATOR_IMPL(<=, less_or_equal);
+    COMPARISON_OPERATOR_IMPL(>, greater);
+    COMPARISON_OPERATOR_IMPL(>=, greater_or_equal);
 
     /**
      * @brief Thread-safe getter for the value.
@@ -213,6 +167,7 @@ public:
         std::lock_guard<std::mutex> guard(m_lock);
         return (m_value.*func)(std::forward<Args>(args)...);
     }
+    
 
     /**
      * @brief Invokes a const member function on the stored value.

@@ -17,7 +17,7 @@ std::string countTask(int start)
     return std::string{"count = "} + std::string{std::to_string(count++)};
 };
 
-// Helper function to simulate work by sleeping for a few seconds
+// Helper function to simulate work by sleeping
 void simulateWork(int duration_ms)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(duration_ms));
