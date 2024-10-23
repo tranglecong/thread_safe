@@ -40,10 +40,10 @@ int main()
     var = "0";
     simulateWork(10);
     // Use invoke to call member function
-    var.invoke([](std::string& s)
+    var.invoke([](Variable::Type& s)
                { s.append("1"); });
 
-    std::cout << "Current size: " << var.invoke([](const std::string& s)
+    std::cout << "Current size: " << var.invoke([](const Variable::Type& s)
                                                 { return s.size(); })
               << std::endl;
 

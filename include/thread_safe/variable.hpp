@@ -29,11 +29,9 @@ namespace ThreadSafe
 template<typename T>
 class Variable
 {
-private:
-    T m_value{};                 ///< The encapsulated value of type T.
-    mutable std::mutex m_lock{}; ///< A mutex to guard access to m_value.
-
 public:
+    using Type = T;
+
     /**
      * @brief Default constructor.
      *
@@ -171,6 +169,10 @@ public:
         std::lock_guard<std::mutex> guard(m_lock);
         return (m_value.*func)(std::forward<Args>(args)...);
     }
+
+private:
+    T m_value{};                 ///< The encapsulated value of type T.
+    mutable std::mutex m_lock{}; ///< A mutex to guard access to m_value.
 };
 
 } // namespace ThreadSafe

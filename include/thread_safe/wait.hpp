@@ -73,7 +73,17 @@ public:
      * @return The status of the wait operation, either `Status::SUCCESS` or `Status::EXIT`.
      */
     template<typename Pr>
-    Status wait(Pr pred);
+    Status wait(Pr pred)
+    {
+        std::unique_lock<std::mutex> lock(m_lock);
+        m_condition.wait(lock, [this, &pred]() -> bool
+                         { return isExit() || pred(); });
+        if (isExit())
+        {
+            return Status::EXIT;
+        }
+        return Status::SUCCESS;
+    }
 
     /**
      * @brief Block the calling thread for a specified duration or until exit is requested.
@@ -88,7 +98,22 @@ public:
      * `Status::EXIT`.
      */
     template<class Repr, class Period>
-    Wait::Status waitFor(const std::chrono::duration<Repr, Period>& timeout);
+    Wait::Status waitFor(const std::chrono::duration<Repr, Period>& timeout)
+    {
+        enableInternalPred();
+        std::unique_lock<std::mutex> lock(m_lock);
+        bool status{m_condition.wait_for(lock, timeout, [this]() -> bool
+                                         { return isExit() || internalPred(); })};
+        if (!status)
+        {
+            return Status::TIMEOUT;
+        }
+        if (isExit())
+        {
+            return Status::EXIT;
+        }
+        return Status::SUCCESS;
+    }
 
     /**
      * @brief Block the calling thread for a specified duration or until the predicate returns true.
@@ -106,7 +131,21 @@ public:
      * `Status::EXIT`.
      */
     template<class Repr, class Period, typename Pr>
-    Status waitFor(const std::chrono::duration<Repr, Period>& timeout, Pr pred);
+    Status waitFor(const std::chrono::duration<Repr, Period>& timeout, Pr pred)
+    {
+        std::unique_lock<std::mutex> lock(m_lock);
+        bool status{m_condition.wait_for(lock, timeout, [this, &pred]() -> bool
+                                         { return isExit() || pred(); })};
+        if (!status)
+        {
+            return Status::TIMEOUT;
+        }
+        if (isExit())
+        {
+            return Status::EXIT;
+        }
+        return Status::SUCCESS;
+    }
 
 private:
     mutable std::mutex m_lock;                     ///< Mutex for thread-safe access
@@ -147,53 +186,5 @@ private:
      */
     void disableInternalPred();
 };
-
-template<typename Pr>
-Wait::Status Wait::wait(Pr pred)
-{
-    std::unique_lock<std::mutex> lock(m_lock);
-    m_condition.wait(lock, [this, &pred]() -> bool
-                     { return isExit() || pred(); });
-    if (isExit())
-    {
-        return Status::EXIT;
-    }
-    return Status::SUCCESS;
-}
-
-template<class Repr, class Period>
-Wait::Status Wait::waitFor(const std::chrono::duration<Repr, Period>& timeout)
-{
-    enableInternalPred();
-    std::unique_lock<std::mutex> lock(m_lock);
-    bool status{m_condition.wait_for(lock, timeout, [this]() -> bool
-                                     { return isExit() || internalPred(); })};
-    if (!status)
-    {
-        return Status::TIMEOUT;
-    }
-    if (isExit())
-    {
-        return Status::EXIT;
-    }
-    return Status::SUCCESS;
-}
-
-template<class Repr, class Period, typename Pr>
-Wait::Status Wait::waitFor(const std::chrono::duration<Repr, Period>& timeout, Pr pred)
-{
-    std::unique_lock<std::mutex> lock(m_lock);
-    bool status{m_condition.wait_for(lock, timeout, [this, &pred]() -> bool
-                                     { return isExit() || pred(); })};
-    if (!status)
-    {
-        return Status::TIMEOUT;
-    }
-    if (isExit())
-    {
-        return Status::EXIT;
-    }
-    return Status::SUCCESS;
-}
 
 } // namespace ThreadSafe
