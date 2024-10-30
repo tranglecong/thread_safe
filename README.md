@@ -1,6 +1,10 @@
-# Thread Safe
+# TRLC ThreadSafe
 
-The **Thread Safe Library** is a C++ library that provides utilities for managing thread-safe operations. This library is designed to simplify concurrent programming by offering easy-to-use and robust thread-safe abstractions.
+![GCC](https://github.com/tranglecong/trlc_threadsafe/actions/workflows/GCC.yml/badge.svg)
+![Clang](https://github.com/tranglecong/trlc_threadsafe/actions/workflows/Clang.yml/badge.svg)
+![MSVC](https://github.com/tranglecong/trlc_threadsafe/actions/workflows/MSVC.yml/badge.svg)
+
+The **TRLC ThreadSafe** is a C++ library that provides utilities for managing thread-safe operations. This library is designed to simplify concurrent programming by offering easy-to-use and robust thread-safe abstractions.
 
 ## Features
 
