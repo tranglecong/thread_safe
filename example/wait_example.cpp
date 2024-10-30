@@ -1,4 +1,4 @@
-#include "thread_safe/wait.hpp"
+#include "trlc/threadsafe/wait.hpp"
 
 #include <atomic>
 #include <chrono>
@@ -7,7 +7,7 @@
 
 int main()
 {
-    using Wait = ThreadSafe::Wait;
+    using Wait = trlc::threadsafe::Wait;
     Wait wait;
     // Thread 1: Will Timeout
     std::thread t1([&]()

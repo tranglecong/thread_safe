@@ -1,4 +1,4 @@
-#include "thread_safe/queue.hpp"
+#include "trlc/threadsafe/queue.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -8,7 +8,7 @@
 
 int main()
 {
-    using Queue = ThreadSafe::Queue<int>;
+    using Queue = trlc::threadsafe::Queue<int>;
     // Queue settings: size = 3, discard oldest elements when full, full control over push/pop
     Queue::Settings settings;
     settings.size = 3;

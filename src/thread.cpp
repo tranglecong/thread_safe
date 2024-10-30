@@ -1,4 +1,4 @@
-#include "thread.hpp"
+#include "trlc/threadsafe/thread.hpp"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -7,7 +7,9 @@
 #include <sched.h>
 #endif
 
-namespace ThreadSafe
+namespace trlc
+{
+namespace threadsafe
 {
 
 constexpr int32_t MAX_NUM_OF_PRIORITY{6};
@@ -52,4 +54,5 @@ void setNaitiveThreadPriority(ThreadPriority priority, const std::thread::native
 #endif
 }
 
-} // namespace ThreadSafe
+} // namespace threadsafe
+} // namespace trlc

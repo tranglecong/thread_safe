@@ -1,11 +1,11 @@
-#include "thread_safe/thread.hpp"
+#include "trlc/threadsafe/thread.hpp"
 
 #include <chrono>
 #include <functional>
 #include <gtest/gtest.h>
 #include <string>
 
-using Thread = ThreadSafe::Thread<int>;
+using Thread = trlc::threadsafe::Thread<int>;
 
 // Mock function to simulate a thread task
 int mockTask(int num, const std::string& message)
@@ -36,7 +36,7 @@ void mockExit()
 TEST(ThreadTest, InvokeAndRunThread)
 {
     // Create a thread object with the function and arguments not yet set
-    Thread thread("TestThread", ThreadSafe::ThreadPriority::NORMAL);
+    Thread thread("TestThread", trlc::threadsafe::ThreadPriority::NORMAL);
 
     // Set the function and arguments using invoke() before starting the thread
     bool success = thread.invoke(mockTask, 42, "Hello, World!");
@@ -61,7 +61,7 @@ TEST(ThreadTest, InvokeAndRunThread)
 TEST(ThreadTest, SetCallbacksAndRunThread)
 {
     // Create a thread object with the function and arguments not yet set
-    Thread thread("TestThread", ThreadSafe::ThreadPriority::NORMAL);
+    Thread thread("TestThread", trlc::threadsafe::ThreadPriority::NORMAL);
 
     // Set the function and arguments using invoke() before starting the thread
     bool success = thread.invoke(mockTask, 10, "Test");
@@ -86,7 +86,7 @@ TEST(ThreadTest, SetCallbacksAndRunThread)
 TEST(ThreadTest, StopThread)
 {
     // Create a thread object with the function and arguments not yet set
-    Thread thread("TestThread", ThreadSafe::ThreadPriority::NORMAL);
+    Thread thread("TestThread", trlc::threadsafe::ThreadPriority::NORMAL);
 
     // Set the function and arguments using invoke() before starting the thread
     bool success = thread.invoke(mockTask, 10, "Stop Test");
@@ -122,7 +122,7 @@ TEST(ThreadTest, RunLoopWithPredicate)
     };
 
     // Create a thread in Thread::RunMode::LOOP
-    Thread thread("LoopThread", ThreadSafe::ThreadPriority::NORMAL);
+    Thread thread("LoopThread", trlc::threadsafe::ThreadPriority::NORMAL);
 
     // Set the function and arguments using invoke()
     bool success = thread.invoke(mockTask, 10, "Loop Test");
@@ -164,7 +164,7 @@ TEST(ThreadTest, StopLoopManually)
     };
 
     // Create a thread in Thread::RunMode::LOOP
-    Thread thread("LoopThreadManualStop", ThreadSafe::ThreadPriority::NORMAL);
+    Thread thread("LoopThreadManualStop", trlc::threadsafe::ThreadPriority::NORMAL);
 
     // Set the function and arguments using invoke()
     bool success = thread.invoke(mockTask, 5, "Manual Stop Test");
@@ -210,7 +210,7 @@ TEST(ThreadTest, StartStopMultipleTimes)
     };
 
     // Create the thread in Thread::RunMode::LOOP
-    Thread thread("LoopThreadMultipleStop", ThreadSafe::ThreadPriority::NORMAL);
+    Thread thread("LoopThreadMultipleStop", trlc::threadsafe::ThreadPriority::NORMAL);
 
     // Set the function and arguments using invoke()
     bool success = thread.invoke(mockTask, 10, "Test Stop Multiple");

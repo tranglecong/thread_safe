@@ -23,11 +23,11 @@ To use this library, you need:
 
 **_This library can be used as [CMake] subdirectory_**
 
-1. Fetch it, e.g. using [git submodules] `git submodule add https://github.com/tranglecong/thread_safe` and `git submodule update --init --recursive`.
+1. Fetch it, e.g. using [git submodules] `git submodule add https://github.com/tranglecong/threadsafe` and `git submodule update --init --recursive`.
 
-2. Call `add_subdirectory(ext/thread_safe)` or whatever your local path is to make it available in [CMake].
+2. Call `add_subdirectory(ext/threadsafe)` or whatever your local path is to make it available in [CMake].
 
-3. Simply call `target_link_libraries(your_target PUBLIC thread_safe)` to link this library and setups the include search path and compilation options.
+3. Simply call `target_link_libraries(your_target PUBLIC threadsafe)` to link this library and setups the include search path and compilation options.
 
 **_You can also install thread safe library_**
 
@@ -52,8 +52,8 @@ To use this library, you need:
 3. To use an installed library.
 
     ```cmake
-    find_package(thread_safe REQUIRED)
-    target_link_libraries(your_target PUBLIC thread_safe)
+    find_package(threadsafe REQUIRED)
+    target_link_libraries(your_target PUBLIC threadsafe)
     ```
 
 ## Example Code
@@ -61,7 +61,7 @@ To use this library, you need:
 ### Queue
 
 ```c++
-#include "thread_safe/queue.hpp"
+#include "trlc/threadsafe/queue.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -71,7 +71,7 @@ To use this library, you need:
 
 int main()
 {
-    using Queue = ThreadSafe::Queue<int>;
+    using Queue = trlc::threadsafe::Queue<int>;
     // Queue settings: size = 3, discard oldest elements when full, full control over push/pop
     Queue::Settings settings;
     settings.size = 3;
@@ -136,12 +136,12 @@ int main()
 }
 ```
 
-Refer to UT for more information on how to use it. [_Thread Safe Queue Tests_](https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_queue_test.cpp)
+Refer to UT for more information on how to use it. [_Thread Safe Queue Tests_](https://github.com/tranglecong/threadsafe/blob/main/tests/thread_safe_queue_test.cpp)
 
 ### Thread
 
 ```c++
-#include "thread_safe/thread.hpp"
+#include "trlc/threadsafe/thread.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -173,9 +173,9 @@ void simulateWork(int duration_ms)
 
 int main()
 {
-    using ThreadOnce = ThreadSafe::Thread<>;
-    using LoopingThread = ThreadSafe::Thread<std::string>;
-    using PredThread = ThreadSafe::Thread<std::string>;
+    using ThreadOnce = trlc::threadsafe::Thread<>;
+    using LoopingThread = trlc::threadsafe::Thread<std::string>;
+    using PredThread = trlc::threadsafe::Thread<std::string>;
 
     // Example 1: Run the task once
     std::cout << "Example 1: Run the task once" << std::endl;
@@ -249,12 +249,12 @@ int main()
 
 ```
 
-Refer to UT for more information on how to use it. [_Thread Safe Thread Tests_](https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_thread_test.cpp)
+Refer to UT for more information on how to use it. [_Thread Safe Thread Tests_](https://github.com/tranglecong/threadsafe/blob/main/tests/thread_safe_thread_test.cpp)
 
 ### Variable
 
 ```c++
-#include "thread_safe/variable.hpp"
+#include "trlc/threadsafe/variable.hpp"
 
 #include <atomic>
 #include <chrono>
@@ -272,7 +272,7 @@ void simulateWork(int duration_ms)
 
 int main()
 {
-    using Variable = ThreadSafe::Variable<std::string>;
+    using Variable = trlc::threadsafe::Variable<std::string>;
 
     Variable var{"Initial"};
     std::atomic<bool> running{true};
@@ -322,12 +322,12 @@ int main()
 }
 ```
 
-Refer to UT for more information on how to use it. [_Thread Safe Thread Tests_](https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_variable_test.cpp)
+Refer to UT for more information on how to use it. [_Thread Safe Thread Tests_](https://github.com/tranglecong/threadsafe/blob/main/tests/thread_safe_variable_test.cpp)
 
 ### Wait
 
 ```c++
-#include "thread_safe/wait.hpp"
+#include "trlc/threadsafe/wait.hpp"
 
 #include <atomic>
 #include <chrono>
@@ -336,7 +336,7 @@ Refer to UT for more information on how to use it. [_Thread Safe Thread Tests_](
 
 int main()
 {
-    using Wait = ThreadSafe::Wait;
+    using Wait = trlc::threadsafe::Wait;
     Wait wait;
     // Thread 1: Will Timeout
     std::thread t1([&]()
@@ -382,11 +382,11 @@ int main()
 }
 ```
 
-Refer to UT for more information on how to use it. [_Thread Safe Thread Tests_](https://github.com/tranglecong/thread_safe/blob/main/tests/thread_safe_wait_test.cpp)
+Refer to UT for more information on how to use it. [_Thread Safe Thread Tests_](https://github.com/tranglecong/threadsafe/blob/main/tests/thread_safe_wait_test.cpp)
 
 ## Documentation
 
-Full documentation can be found at <https://tranglecong.github.io/thread_safe/html>.
+Full documentation can be found at <https://tranglecong.github.io/threadsafe/html>.
 
 [CMake]: www.cmake.org
 [git submodules]: http://git-scm.com/docs/git-submodule

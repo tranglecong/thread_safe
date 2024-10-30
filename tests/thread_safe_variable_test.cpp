@@ -1,4 +1,4 @@
-#include "thread_safe/variable.hpp"
+#include "trlc/threadsafe/variable.hpp"
 
 #include <gtest/gtest.h>
 #include <thread>
@@ -7,7 +7,7 @@
 // Test for basic functionality of Variable
 TEST(ThreadSafeVariableTests, SetAndGetValue)
 {
-    ThreadSafe::Variable<int> var;
+    trlc::threadsafe::Variable<int> var;
 
     var = 42;
     EXPECT_EQ(var.get(), 42);
@@ -18,7 +18,7 @@ TEST(ThreadSafeVariableTests, SetAndGetValue)
 // Test invoking a non-member function
 TEST(ThreadSafeVariableTests, InvokeNonMemberFunction)
 {
-    ThreadSafe::Variable<int> var{5};
+    trlc::threadsafe::Variable<int> var{5};
 
     // Define a simple function that adds a number
     auto add = [](int val, int addend)
@@ -31,7 +31,7 @@ TEST(ThreadSafeVariableTests, InvokeNonMemberFunction)
 // Test invoking a member function on a stored value
 TEST(ThreadSafeVariableTests, InvokeMemberFunction)
 {
-    ThreadSafe::Variable<std::vector<std::string>> var{"apple", "banana", "cherry"};
+    trlc::threadsafe::Variable<std::vector<std::string>> var{"apple", "banana", "cherry"};
 
     // Invoke the `operator[]` member function
     EXPECT_EQ(var.invoke(&std::vector<std::string>::operator[], std::size_t{1}), "banana");
@@ -40,7 +40,7 @@ TEST(ThreadSafeVariableTests, InvokeMemberFunction)
 // Test invoking a const member function on a stored value
 TEST(ThreadSafeVariableTests, InvokeConstMemberFunction)
 {
-    const ThreadSafe::Variable<std::vector<std::string>> var{"apple", "banana", "cherry"};
+    const trlc::threadsafe::Variable<std::vector<std::string>> var{"apple", "banana", "cherry"};
 
     // Invoke the const `operator[]` member function
     EXPECT_EQ(var.invoke(&std::vector<std::string>::operator[], std::size_t{2}), "cherry");
@@ -49,7 +49,7 @@ TEST(ThreadSafeVariableTests, InvokeConstMemberFunction)
 // Test thread safety
 TEST(ThreadSafeVariableTests, ThreadSafety)
 {
-    ThreadSafe::Variable<int> var{0};
+    trlc::threadsafe::Variable<int> var{0};
 
     auto add = [](int& val, int addend)
     { val = val + addend; };
@@ -78,7 +78,7 @@ TEST(ThreadSafeVariableTests, ThreadSafety)
 // Test default constructor and assignment operator
 TEST(ThreadSafeVariableTests, DefaultConstructorAndAssignment)
 {
-    ThreadSafe::Variable<std::string> var;
+    trlc::threadsafe::Variable<std::string> var;
 
     var = std::string{"Hello"};
     EXPECT_EQ(var.get(), "Hello");
@@ -90,7 +90,7 @@ TEST(ThreadSafeVariableTests, DefaultConstructorAndAssignment)
 // Test invoking with lambda function and capture
 TEST(ThreadSafeVariableTests, InvokeWithLambda)
 {
-    ThreadSafe::Variable<int> var(10);
+    trlc::threadsafe::Variable<int> var(10);
 
     // Lambda function that multiplies the value
     auto multiply = [](int val, int factor)
@@ -103,7 +103,7 @@ TEST(ThreadSafeVariableTests, InvokeWithLambda)
 // Test const correctness when invoking const member functions
 TEST(ThreadSafeVariableTests, ConstCorrectness)
 {
-    const ThreadSafe::Variable<std::vector<int>> var{1, 2, 3, 4};
+    const trlc::threadsafe::Variable<std::vector<int>> var{1, 2, 3, 4};
 
     // Invoke const member function `operator[]` via const object
     EXPECT_EQ(var.invoke(&std::vector<int>::operator[], std::size_t{2}), 3);
@@ -112,7 +112,7 @@ TEST(ThreadSafeVariableTests, ConstCorrectness)
 // Test for empty constructor
 TEST(ThreadSafeVariableTests, EmptyConstructor)
 {
-    ThreadSafe::Variable<std::string> var;
+    trlc::threadsafe::Variable<std::string> var;
     EXPECT_EQ(var.get(), "");
 }
 

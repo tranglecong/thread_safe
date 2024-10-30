@@ -1,10 +1,10 @@
-#include "thread_safe/queue.hpp"
+#include "trlc/threadsafe/queue.hpp"
 
 #include <chrono>
 #include <gtest/gtest.h>
 #include <thread>
 
-using Queue = ThreadSafe::Queue<int>;
+using Queue = trlc::threadsafe::Queue<int>;
 
 // Utility function to simulate delay (sleep)
 void sleep_ms(int milliseconds)

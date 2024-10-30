@@ -1,10 +1,10 @@
-#include "thread_safe/wait.hpp"
+#include "trlc/threadsafe/wait.hpp"
 
 #include <chrono>
 #include <gtest/gtest.h>
 #include <thread>
 
-using namespace ThreadSafe;
+using Wait = trlc::threadsafe::Wait;
 
 /**
  * @brief Test for notify function

@@ -11,9 +11,6 @@ set(EXAMPLE_SOURCES
 # Loop through each example source and create the corresponding executable
 foreach(EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
     get_filename_component(EXAMPLE_NAME ${EXAMPLE_SOURCE} NAME_WE)
-
     add_executable(${EXAMPLE_NAME} ${EXAMPLE_SOURCE})
-    target_link_libraries(${EXAMPLE_NAME} PRIVATE thread_safe)
-    target_include_directories(${EXAMPLE_NAME} PRIVATE
-        ${THREAD_SAFE_SOURCE_DIR}/include/thread_safe)
+    target_link_libraries(${EXAMPLE_NAME} PRIVATE trlc::threadsafe)
 endforeach()

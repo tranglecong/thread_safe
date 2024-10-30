@@ -1,6 +1,8 @@
-#include "wait.hpp"
+#include "trlc/threadsafe/wait.hpp"
 
-namespace ThreadSafe
+namespace trlc
+{
+namespace threadsafe
 {
 
 Wait::~Wait()
@@ -59,4 +61,5 @@ Wait::Status Wait::wait()
     return Status::SUCCESS;
 }
 
-} // namespace ThreadSafe
+} // namespace threadsafe
+} // namespace trlc

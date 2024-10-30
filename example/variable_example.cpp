@@ -1,4 +1,4 @@
-#include "thread_safe/variable.hpp"
+#include "trlc/threadsafe/variable.hpp"
 
 #include <atomic>
 #include <chrono>
@@ -16,7 +16,7 @@ void simulateWork(int duration_ms)
 
 int main()
 {
-    using Variable = ThreadSafe::Variable<std::string>;
+    using Variable = trlc::threadsafe::Variable<std::string>;
 
     Variable var{"Initial"};
     std::atomic<bool> running{true};

@@ -1,4 +1,4 @@
-#include "thread_safe/thread.hpp"
+#include "trlc/threadsafe/thread.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -30,9 +30,9 @@ void simulateWork(int duration_ms)
 
 int main()
 {
-    using ThreadOnce = ThreadSafe::Thread<>;
-    using LoopingThread = ThreadSafe::Thread<std::string>;
-    using PredThread = ThreadSafe::Thread<std::string>;
+    using ThreadOnce = trlc::threadsafe::Thread<>;
+    using LoopingThread = trlc::threadsafe::Thread<std::string>;
+    using PredThread = trlc::threadsafe::Thread<std::string>;
 
     // Example 1: Run the task once
     std::cout << "Example 1: Run the task once" << std::endl;
