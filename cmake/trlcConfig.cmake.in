@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+# Glob for all target files in the current directory
+file(GLOB TARGET_FILES "${CMAKE_CURRENT_LIST_DIR}/*Targets.cmake")
+
+# Include each target file
+foreach(TARGET_FILE ${TARGET_FILES})
+    include("${TARGET_FILE}")
+endforeach()
