@@ -2,6 +2,7 @@
 
 #include "trlc/threadsafe/common.hpp"
 
+#include <any>
 #include <atomic>
 #include <cstdint>
 #include <functional>
@@ -44,38 +45,17 @@ const NativeThreadPrioritys& defaultNativeThreadPrioritys();
  */
 void setNaitiveThreadPriority(ThreadPriority priority, const std::thread::native_handle_type native_handle);
 
-namespace Trait
-{
-/**
- * @brief Template struct to define the callback type for thread results.
- * @tparam T The type of the result.
- */
-template<typename T>
-struct ThreadResultCallbackType
-{
-    using type = std::function<void(const T&)>;
-};
-
-template<>
-struct ThreadResultCallbackType<void>
-{
-    using type = std::function<void()>;
-};
-} // namespace Trait
-
 /**
  * @brief A thread class that supports custom functions, thread priorities, and callbacks.
- * @tparam Result The type of the result returned by the thread function.
  */
-template<typename Result = std::void_t<>>
 class Thread
 {
 public:
+    using ResultType = std::any;
     using Callback = std::function<void()>;
-    using ResultCallback = typename Trait::ThreadResultCallbackType<Result>::type;
-    using Callable = std::function<Result()>;
+    using ResultCallback = std::function<void(const ResultType&)>;
+    using Callable = std::function<ResultType()>;
     using Pred = std::function<bool()>;
-    using ResultType = Result;
 
     /**
      * @brief Enum to represent whether the thread should run once or in a loop.
@@ -125,10 +105,20 @@ public:
             return false;
         }
 
-        // Store the function (converted to std::function<Result()>)
-        m_callable = [func, tuple_args = std::tuple<Args...>(std::forward<Args>(args)...)]() mutable
+        // Store the function (converted to std::function<ResultType()>)
+        m_callable = [func, tuple_args = std::tuple<Args...>(std::forward<Args>(args)...)]() mutable -> ResultType
         {
-            return std::apply(func, tuple_args);
+            using result_t = decltype(std::apply(func, tuple_args));
+            ResultType result{};
+            if constexpr (std::is_void_v<result_t>)
+            {
+                std::apply(func, tuple_args);
+            }
+            else
+            {
+                result = std::apply(func, tuple_args);
+            }
+            return result;
         };
         return true;
     }
@@ -256,22 +246,12 @@ private:
     {
         if (m_callable)
         {
-            if constexpr (std::is_void_v<Result>)
+            ResultType result{};
+            result = std::move(m_callable());
+            if (m_result_callback)
             {
-                m_callable();
-                if (m_result_callback)
-                {
-                    m_result_callback();
-                };
-            }
-            else
-            {
-                Result result{m_callable()};
-                if (m_result_callback)
-                {
-                    m_result_callback(result);
-                };
-            }
+                m_result_callback(result);
+            };
         }
     }
 

@@ -1,5 +1,3 @@
-#include "trlc/threadsafe/variable.hpp"
-
 #include <atomic>
 #include <chrono>
 #include <cstdlib>
@@ -7,6 +5,7 @@
 #include <ostream>
 #include <string>
 #include <thread>
+#include <trlc/threadsafe/variable.hpp>
 
 // Helper function to simulate work by sleeping
 void simulateWork(int duration_ms)

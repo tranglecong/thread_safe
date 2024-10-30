@@ -1,10 +1,9 @@
-#include "trlc/threadsafe/queue.hpp"
-
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
 #include <thread>
+#include <trlc/threadsafe/queue.hpp>
 
 int main()
 {

@@ -1,9 +1,8 @@
-#include "trlc/threadsafe/thread.hpp"
-
 #include <chrono>
 #include <iostream>
 #include <string>
 #include <thread>
+#include <trlc/threadsafe/thread.hpp>
 
 void print(const std::string msg)
 {
@@ -30,29 +29,27 @@ void simulateWork(int duration_ms)
 
 int main()
 {
-    using ThreadOnce = trlc::threadsafe::Thread<>;
-    using LoopingThread = trlc::threadsafe::Thread<std::string>;
-    using PredThread = trlc::threadsafe::Thread<std::string>;
+    using Thread = trlc::threadsafe::Thread;
 
     // Example 1: Run the task once
     std::cout << "Example 1: Run the task once" << std::endl;
 
-    ThreadOnce thread_once{"thread once"};
+    Thread thread_once{"thread once"};
     thread_once.setStartCallback([]() -> void
                                  { std::cout << "Thread started..." << std::endl; });
-    thread_once.setResultCallback([]() -> void
+    thread_once.setResultCallback([](const Thread::ResultType& result) -> void
                                   { std::cout << "Result callback called! " << std::endl; });
     thread_once.setExitCallback([]() -> void
                                 { std::cout << "Thread finished." << std::endl; });
     // Invoke task for thread
     thread_once.invoke(print, "Hello World");
-    thread_once.run(ThreadOnce::RunMode::ONCE);
+    thread_once.run(Thread::RunMode::ONCE);
     // Wait for the thread to finish
     thread_once.stop();
 
     // Invoke task for thread
     thread_once.invoke(print, "From Thread<>");
-    thread_once.run(ThreadOnce::RunMode::ONCE);
+    thread_once.run(Thread::RunMode::ONCE);
     // Wait for the thread to finish
     thread_once.stop();
 
@@ -61,16 +58,16 @@ int main()
     // Example 2: Run a task in a loop until stopped
     std::cout << "Example 2: Run the task in a loop" << std::endl;
 
-    LoopingThread looping_thread{"looping thread"};
+    Thread looping_thread{"looping thread"};
     looping_thread.setStartCallback([]() -> void
                                     { std::cout << "Looping thread started..." << std::endl; });
-    looping_thread.setResultCallback([](const LoopingThread::ResultType& result) -> void
-                                     { std::cout << "Loop result: " << result << std::endl; });
+    looping_thread.setResultCallback([](const Thread::ResultType& result) -> void
+                                     { std::cout << "Loop result: " << std::any_cast<std::string>(result) << std::endl; });
     looping_thread.setExitCallback([]() -> void
                                    { std::cout << "Looping thread finished." << std::endl; });
 
     looping_thread.invoke(countTask, 10);
-    looping_thread.run(LoopingThread::RunMode::LOOP);
+    looping_thread.run(Thread::RunMode::LOOP);
 
     // Simulate some work in the main thread while the loop runs
     simulateWork(1050);
@@ -82,11 +79,11 @@ int main()
     std::cout << "Example 3: Loop with a predicate (runs 5 times)" << std::endl;
 
     int iteration_count = 0;
-    PredThread pred_thread{"PredicateThread"};
+    Thread pred_thread{"PredicateThread"};
     // Set result callback to print results and increment the count
-    pred_thread.setResultCallback([&iteration_count](const PredThread::ResultType& result) -> void
+    pred_thread.setResultCallback([&iteration_count](const Thread::ResultType& result) -> void
                                   {
-        std::cout << "Predicate loop result: " << result << std::endl;
+        std::cout << "Predicate loop result: " << std::any_cast<std::string>(result) << std::endl;
         iteration_count++; });
 
     pred_thread.invoke(countTask, 10);
@@ -95,7 +92,7 @@ int main()
                              {
             return iteration_count < 5;  /*Stop after 5 iterations*/ });
 
-    pred_thread.run(PredThread::RunMode::LOOP);
+    pred_thread.run(Thread::RunMode::LOOP);
     // Simulate some work in the main thread while the loop runs
     simulateWork(1000);
 

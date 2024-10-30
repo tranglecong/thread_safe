@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <string>
 
-using Thread = trlc::threadsafe::Thread<int>;
+using Thread = trlc::threadsafe::Thread;
 
 // Mock function to simulate a thread task
 int mockTask(int num, const std::string& message)
@@ -21,9 +21,9 @@ void mockStart()
 }
 
 // Mock result callback
-void mockResultCallback(const int& result)
+void mockResultCallback(const Thread::ResultType& result)
 {
-    std::cout << "Result callback received: " << result << std::endl;
+    std::cout << "Result callback received: " << std::any_cast<std::string>(result) << std::endl;
 }
 
 // Mock exit callback

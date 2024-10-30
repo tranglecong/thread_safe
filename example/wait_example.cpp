@@ -1,4 +1,4 @@
-#include "trlc/threadsafe/wait.hpp"
+#include <trlc/threadsafe/wait.hpp>
 
 #include <atomic>
 #include <chrono>
