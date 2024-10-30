@@ -23,7 +23,7 @@ void mockStart()
 // Mock result callback
 void mockResultCallback(const Thread::ResultType& result)
 {
-    std::cout << "Result callback received: " << std::any_cast<std::string>(result) << std::endl;
+    std::cout << "Result callback received: " << std::any_cast<int>(result) << std::endl;
 }
 
 // Mock exit callback
