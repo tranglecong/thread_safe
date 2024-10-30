@@ -382,7 +382,7 @@ You can also install trlc_threadsafe library
 
 ## Documentation
 
-Full documentation can be found at <https://tranglecong.github.io/trlc_threadsafe/html>.
+Full documentation can be found at <https://tranglecong.github.io/trlc_threadsafe>.
 
 ## Contributing
 
